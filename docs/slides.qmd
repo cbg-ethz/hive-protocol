@@ -2,7 +2,7 @@
 title: "Modern Python for Computational Biology"
 subtitle: "The Hive Protocol"
 author: "CBG Retreat 2026"
-date: "January 21-23, 2026"
+date: "January 2026"
 format:
   revealjs:
     theme: [default, custom.scss]
@@ -19,7 +19,7 @@ execute:
   eval: false
 ---
 
-# Day 1: Foundations {background-color="#2E86AB"}
+# Foundations {background-color="#2E86AB"}
 
 ## The Problem
 
@@ -160,9 +160,9 @@ pixi install
 pixi run test
 ```
 
-**Goal:** Everyone has a working environment before Day 2.
+**Goal:** Everyone has a working environment.
 
-# Day 2: Bayesian Inference {background-color="#A23B72"}
+# Example: Bayesian Inference {background-color="#A23B72"}
 
 ## What is Bayesian Inference?
 
@@ -327,7 +327,7 @@ filtered = extract_filtered_states(trace)
 print(generate_diagnostic_report(trace, states, filtered))
 ```
 
-# Day 3: Workflows & Quality {background-color="#F18F01"}
+# Workflows & Quality {background-color="#F18F01"}
 
 ## Git for Researchers
 
@@ -483,11 +483,11 @@ git push -u origin demo/my-feature
 
 ## What We Covered
 
-| Day | Topic | Key Takeaway |
-|-----|-------|--------------|
-| 1 | Foundations | Use pixi + Ruff for 10-100x speedup |
-| 2 | Bayesian Inference | Always check diagnostics |
-| 3 | Workflows | Automate quality with CI/CD |
+| Topic | Key Takeaway |
+|-------|--------------|
+| Foundations | Use pixi + Ruff for 10-100x speedup |
+| Bayesian Example | Always check diagnostics |
+| Workflows | Automate quality with CI/CD |
 
 ## Resources
 
