@@ -1,0 +1,222 @@
+---
+title: "Introduction to Bayesian Inference"
+subtitle: "Modern Python for Computational Biology"
+author: "CBG-ETH Zurich"
+date: "2026-01-21"
+format:
+  html:
+    code-fold: false
+    toc: true
+execute:
+  freeze: auto
+jupyter: python3
+---
+
+## Welcome to Hive-Protocol
+
+This tutorial series introduces modern Python practices for computational biology,
+using Bayesian inference as the teaching example. By the end of this workshop,
+you'll be comfortable with:
+
+- **PyMC** for probabilistic programming
+- **Polars** for efficient data manipulation
+- **ArviZ** for posterior analysis
+- **Quarto** for reproducible reporting
+
+## Why Bayesian Inference?
+
+Bayesian inference provides a principled framework for:
+
+1. **Quantifying uncertainty** - Every estimate comes with credible intervals
+2. **Incorporating prior knowledge** - Use domain expertise formally
+3. **Handling missing data** - Naturally integrates uncertainty
+4. **Model comparison** - Compare hypotheses rigorously
+
+## Setup Check
+
+Let's verify our environment is correctly configured:
+
+```{python}
+#| label: setup-check
+#| echo: true
+
+# Standard imports
+import numpy as np
+import polars as pl
+import matplotlib.pyplot as plt
+
+# Bayesian stack
+import pymc as pm
+import arviz as az
+
+# Our package
+from hive_protocol import __version__
+from hive_protocol.data import simulate_noisy_trajectory
+from hive_protocol.inference import fit_kalman_filter
+
+print(f"hive-protocol version: {__version__}")
+print(f"PyMC version: {pm.__version__}")
+print(f"ArviZ version: {az.__version__}")
+print(f"Polars version: {pl.__version__}")
+```
+
+## A Gentle Introduction
+
+Let's start with a simple example: estimating the mean of noisy data.
+
+### The Problem
+
+Suppose we measure something 20 times and get noisy readings:
+
+```{python}
+#| label: simple-data
+#| echo: true
+
+# Generate some noisy measurements
+np.random.seed(42)
+true_mean = 5.0
+true_sigma = 2.0
+measurements = np.random.normal(true_mean, true_sigma, size=20)
+
+print(f"Sample mean: {measurements.mean():.2f}")
+print(f"Sample std: {measurements.std():.2f}")
+```
+
+### The Bayesian Approach
+
+With PyMC, we build a **generative model** that describes how we think the data
+was generated:
+
+```{python}
+#| label: simple-model
+#| echo: true
+
+with pm.Model() as simple_model:
+    # Prior: we think the mean is somewhere around 0, but we're uncertain
+    mu = pm.Normal("mu", mu=0, sigma=10)
+
+    # Prior: standard deviation is positive
+    sigma = pm.HalfNormal("sigma", sigma=5)
+
+    # Likelihood: our measurements come from this distribution
+    y = pm.Normal("y", mu=mu, sigma=sigma, observed=measurements)
+
+    # Sample from the posterior
+    trace = pm.sample(1000, tune=500, random_seed=42, progressbar=False)
+```
+
+### Examining Results
+
+ArviZ provides excellent tools for posterior analysis:
+
+```{python}
+#| label: simple-results
+#| echo: true
+#| fig-cap: "Posterior distributions for mean and standard deviation"
+
+# Summary statistics
+print(az.summary(trace, var_names=["mu", "sigma"]))
+```
+
+```{python}
+#| label: simple-plot
+#| echo: true
+#| fig-cap: "Posterior distributions"
+
+# Visualization
+az.plot_posterior(trace, var_names=["mu", "sigma"])
+plt.tight_layout()
+plt.show()
+```
+
+### Interpreting Results
+
+The posterior tells us:
+
+- The mean is most likely around **{python} f"{trace.posterior['mu'].mean().values:.2f}"**
+  (the true value was 5.0)
+- We have **94% credible intervals** shown in the plot
+- The uncertainty is properly propagated through our analysis
+
+## Key Concepts
+
+### 1. Prior Distributions
+
+Priors encode our beliefs *before* seeing data:
+
+```{python}
+#| label: priors
+#| echo: true
+
+# Weakly informative prior (lets data speak)
+weak_prior = pm.Normal.dist(mu=0, sigma=10)
+
+# Informative prior (strong prior belief)
+strong_prior = pm.Normal.dist(mu=5, sigma=1)
+
+# Plot them
+fig, ax = plt.subplots(figsize=(8, 4))
+x = np.linspace(-20, 20, 200)
+ax.plot(x, np.exp(pm.logp(weak_prior, x).eval()), label="Weak prior: N(0, 10)")
+ax.plot(x, np.exp(pm.logp(strong_prior, x).eval()), label="Strong prior: N(5, 1)")
+ax.set_xlabel("Value")
+ax.set_ylabel("Density")
+ax.legend()
+ax.set_title("Comparing Prior Distributions")
+plt.show()
+```
+
+### 2. Likelihood Function
+
+The likelihood connects our model to observed data:
+
+$$
+p(\text{data} | \theta) = \prod_{i=1}^{n} \text{Normal}(y_i | \mu, \sigma)
+$$
+
+### 3. Posterior Distribution
+
+Bayes' theorem combines prior and likelihood:
+
+$$
+p(\theta | \text{data}) \propto p(\text{data} | \theta) \times p(\theta)
+$$
+
+PyMC uses MCMC sampling to approximate this posterior.
+
+## Modern Python Style
+
+Notice how we use modern Python throughout:
+
+```{python}
+#| label: modern-python
+#| echo: true
+
+# Type hints make code self-documenting
+def compute_summary(values: np.ndarray) -> dict[str, float]:
+    """Compute summary statistics."""
+    return {
+        "mean": float(values.mean()),
+        "std": float(values.std()),
+        "min": float(values.min()),
+        "max": float(values.max()),
+    }
+
+# Polars for DataFrames (much faster than pandas for large data)
+df = pl.DataFrame({
+    "measurement": measurements.tolist(),
+    "deviation_from_mean": (measurements - measurements.mean()).tolist(),
+})
+
+print(df.describe())
+```
+
+## Next Steps
+
+In the next notebook, we'll apply these concepts to **Kalman filtering**:
+
+- Tracking hidden states through time
+- State-space models in PyMC
+- Visualizing filtered trajectories
+
+Continue to [02_kalman_filter.qmd](02_kalman_filter.qmd)

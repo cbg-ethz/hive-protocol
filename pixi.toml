@@ -1,0 +1,136 @@
+# pixi.toml - Modern package management for conda + PyPI
+# Pixi is the recommended tool for computational biology because it handles
+# both conda packages (samtools, bedtools, etc.) and PyPI packages seamlessly.
+#
+# See: https://pixi.sh/
+#
+# Quick start:
+#   pixi install          # Create environment and install dependencies
+#   pixi run test         # Run tests
+#   pixi run lint         # Check code style
+#   pixi shell            # Activate environment
+
+[workspace]
+name = "hive-protocol"
+version = "0.1.0"
+description = "The definitive protocol for Python in computational biology"
+authors = ["CBG-ETH Zurich <cbg@ethz.ch>"]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-64", "osx-arm64"]
+
+# =============================================================================
+# Dependencies
+# =============================================================================
+
+[dependencies]
+# Python version
+python = ">=3.10,<3.13"
+
+# Scientific computing core (from conda-forge for optimized builds)
+numpy = ">=1.24"
+scipy = ">=1.10"
+
+# Bayesian inference
+pymc = ">=5.0"
+arviz = ">=0.15"
+
+# Data manipulation
+polars = ">=0.20"
+
+# Visualization
+matplotlib = ">=3.7"
+seaborn = ">=0.12"
+
+# Development tools (available on conda-forge)
+pytest = ">=7.0"
+pytest-cov = ">=4.0"
+hypothesis = ">=6.0"
+ruff = ">=0.8.0"
+pre-commit = ">=3.0"
+
+# Documentation
+quarto = ">=1.4"
+
+# Type checking
+mypy = ">=1.0"      # Used in CI/pre-commit for stability
+pyright = ">=1.1"   # Used locally for fast feedback
+
+# =============================================================================
+# PyPI-only dependencies
+# =============================================================================
+
+[pypi-dependencies]
+# Install the package itself in editable mode
+hive-protocol = { path = ".", editable = true }
+
+# Snakemake from PyPI (more reliable cross-platform than conda)
+snakemake = ">=8.0"
+
+# =============================================================================
+# Tasks - Custom commands accessible via `pixi run <task>`
+# =============================================================================
+
+[tasks]
+# Run tests
+test = "pytest tests/ -v"
+
+# Run tests with coverage
+test-cov = "pytest tests/ --cov=src/hive_protocol --cov-report=term-missing"
+
+# Run linter
+lint = "ruff check src/ tests/"
+
+# Auto-fix lint issues
+lint-fix = "ruff check src/ tests/ --fix"
+
+# Format code
+format = "ruff format src/ tests/"
+
+# Check formatting without changing files
+format-check = "ruff format src/ tests/ --check"
+
+# Type checking - pyright for local dev (fast), mypy for CI (stable)
+typecheck = "pyright src/"           # Default: fast local feedback
+typecheck-strict = "pyright src/ --level strict"  # Stricter checking
+typecheck-ci = "mypy src/"           # Used in CI/pre-commit
+
+# Run all quality checks (uses mypy for CI compatibility)
+check = { depends-on = ["lint", "format-check", "typecheck-ci", "test"] }
+
+# Install pre-commit hooks
+hooks = "pre-commit install"
+
+# Run pre-commit on all files
+hooks-all = "pre-commit run --all-files"
+
+# Render Quarto notebooks
+docs = "quarto render notebooks/"
+
+# Run Snakemake workflow (dry run)
+workflow-dry = "snakemake -n --snakefile workflow/Snakefile"
+
+# Run Snakemake workflow
+workflow = "snakemake --cores 4 --snakefile workflow/Snakefile"
+
+# Clean generated files
+clean = "rm -rf results/*.parquet docs/*.html .pytest_cache .mypy_cache .ruff_cache"
+
+# =============================================================================
+# Activation
+# =============================================================================
+
+[activation.env]
+# Ensure reproducible PyMC behavior
+PYTENSOR_FLAGS = "device=cpu,floatX=float64"
+
+# =============================================================================
+# Platform-specific configuration
+# =============================================================================
+
+[target.osx-arm64.dependencies]
+# ARM Mac specific - use accelerate for faster linear algebra
+libblas = { version = "*", build = "*accelerate" }
+
+[target.linux-64.dependencies]
+# Linux specific - use OpenBLAS
+libblas = { version = "*", build = "*openblas" }

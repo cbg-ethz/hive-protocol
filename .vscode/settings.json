@@ -1,0 +1,64 @@
+{
+  // ==========================================================================
+  // Python Configuration
+  // ==========================================================================
+  "python.defaultInterpreterPath": "${workspaceFolder}/.pixi/envs/default/bin/python",
+
+  // ==========================================================================
+  // Type Checking - Pylance (uses Pyright under the hood)
+  // ==========================================================================
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.inlayHints.functionReturnTypes": true,
+  "python.analysis.inlayHints.variableTypes": false,
+
+  // ==========================================================================
+  // Formatting - Ruff (replaces Black)
+  // ==========================================================================
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    }
+  },
+
+  // ==========================================================================
+  // Linting - Ruff (replaces flake8, pylint)
+  // ==========================================================================
+  "ruff.lint.enable": true,
+  "ruff.format.args": [],
+
+  // Disable older tools (Ruff replaces them)
+  "python.linting.enabled": false,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": false,
+
+  // ==========================================================================
+  // Testing - pytest
+  // ==========================================================================
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestArgs": ["tests"],
+
+  // ==========================================================================
+  // Editor
+  // ==========================================================================
+  "editor.rulers": [88],
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+
+  // ==========================================================================
+  // Files to exclude from search/explorer
+  // ==========================================================================
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.mypy_cache": true,
+    "**/.ruff_cache": true,
+    "**/*.egg-info": true,
+    ".pixi": true
+  }
+}

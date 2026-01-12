@@ -1,0 +1,31 @@
+# Snakemake workflow configuration for Kalman filter experiments
+# This file defines the parameter grid for systematic experiments
+
+# Simulation parameters
+simulation:
+  n_steps: 100
+  seed: 42
+
+# Parameter sweep grid
+# Each combination will be run as a separate experiment
+parameter_grid:
+  process_noise:
+    - 0.1
+    - 0.3
+    - 0.5
+    - 1.0
+  measurement_noise:
+    - 0.2
+    - 0.5
+    - 1.0
+    - 2.0
+
+# Inference settings
+inference:
+  n_samples: 500
+  n_tune: 250
+
+# Output settings
+output:
+  results_dir: "results"
+  docs_dir: "docs"

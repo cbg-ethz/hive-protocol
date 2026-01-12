@@ -1,0 +1,316 @@
+---
+title: "Kalman Filter Tutorial"
+subtitle: "State-Space Models with PyMC"
+author: "CBG-ETH Zurich"
+date: "2026-01-22"
+format:
+  html:
+    code-fold: false
+    toc: true
+execute:
+  freeze: auto
+jupyter: python3
+---
+
+## The Kalman Filter
+
+The Kalman filter is a fundamental algorithm for tracking **hidden states**
+through noisy observations. It's used in:
+
+- GPS navigation
+- Robot localization
+- Financial time series
+- **Gene expression dynamics**
+- **Cell tracking in microscopy**
+
+## The State-Space Model
+
+A linear Gaussian state-space model has two equations:
+
+**State equation** (how the hidden state evolves):
+$$
+x_t = x_{t-1} + w_t, \quad w_t \sim \mathcal{N}(0, \sigma_{\text{process}}^2)
+$$
+
+**Observation equation** (how we measure the state):
+$$
+y_t = x_t + v_t, \quad v_t \sim \mathcal{N}(0, \sigma_{\text{measurement}}^2)
+$$
+
+## Setup
+
+```{python}
+#| label: setup
+#| echo: true
+
+import numpy as np
+import polars as pl
+import matplotlib.pyplot as plt
+import arviz as az
+
+# Our package
+from hive_protocol.data import simulate_noisy_trajectory
+from hive_protocol.inference import (
+    fit_kalman_filter,
+    extract_filtered_states,
+    get_noise_estimates,
+)
+```
+
+## Simulating Data
+
+Let's generate synthetic data where we know the ground truth:
+
+```{python}
+#| label: simulate
+#| echo: true
+
+# Simulate a trajectory
+# - process_noise: how much the true state varies
+# - measurement_noise: how noisy our observations are
+true_states, observations = simulate_noisy_trajectory(
+    n_steps=100,
+    process_noise=0.2,      # Moderate state variation
+    measurement_noise=0.8,  # Noisy measurements
+    seed=42,
+)
+
+print(f"Generated {len(observations)} observations")
+print(f"True state range: [{true_states.min():.2f}, {true_states.max():.2f}]")
+print(f"Observation range: [{observations.min():.2f}, {observations.max():.2f}]")
+```
+
+```{python}
+#| label: plot-data
+#| echo: true
+#| fig-cap: "Simulated data: true states (hidden) vs noisy observations"
+
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.plot(true_states, "b-", linewidth=2, label="True state (hidden)", alpha=0.8)
+ax.plot(observations, "r.", markersize=4, label="Observations (noisy)", alpha=0.6)
+ax.set_xlabel("Time step")
+ax.set_ylabel("Value")
+ax.set_title("State-Space Model: Hidden States and Noisy Observations")
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.show()
+```
+
+## Fitting the Kalman Filter
+
+Now we use our `fit_kalman_filter` function to recover the hidden states:
+
+```{python}
+#| label: fit-model
+#| echo: true
+
+# Fit the Kalman filter
+# This uses PyMC to sample from the posterior distribution
+model, trace = fit_kalman_filter(
+    observations,
+    process_variance_prior=1.0,      # Prior belief about process noise
+    measurement_variance_prior=1.0,  # Prior belief about measurement noise
+    n_samples=1000,
+    n_tune=500,
+    random_seed=42,
+)
+
+print("Sampling complete!")
+```
+
+## Extracting Results
+
+### Filtered States
+
+```{python}
+#| label: extract-states
+#| echo: true
+
+# Get point estimates and credible intervals
+filtered = extract_filtered_states(trace, credible_interval=0.94)
+
+print("Filtered state keys:", list(filtered.keys()))
+print(f"State estimates shape: {filtered['mean'].shape}")
+```
+
+### Noise Parameter Estimates
+
+```{python}
+#| label: noise-estimates
+#| echo: true
+
+# Get estimated noise parameters
+noise = get_noise_estimates(trace)
+
+print("\nProcess noise estimate:")
+print(f"  Mean: {noise['process_noise']['mean']:.3f}")
+print(f"  95% HDI: [{noise['process_noise']['hdi_3%']:.3f}, {noise['process_noise']['hdi_97%']:.3f}]")
+print(f"  True value: 0.200")
+
+print("\nMeasurement noise estimate:")
+print(f"  Mean: {noise['measurement_noise']['mean']:.3f}")
+print(f"  95% HDI: [{noise['measurement_noise']['hdi_3%']:.3f}, {noise['measurement_noise']['hdi_97%']:.3f}]")
+print(f"  True value: 0.800")
+```
+
+## Visualization
+
+### Filtered States with Uncertainty
+
+```{python}
+#| label: plot-filtered
+#| echo: true
+#| fig-cap: "Kalman filter results: posterior state estimates with 94% credible intervals"
+
+fig, ax = plt.subplots(figsize=(12, 6))
+
+time = np.arange(len(observations))
+
+# Plot credible interval
+ax.fill_between(
+    time,
+    filtered["lower"],
+    filtered["upper"],
+    alpha=0.3,
+    color="green",
+    label="94% Credible Interval",
+)
+
+# Plot estimates
+ax.plot(time, filtered["mean"], "g-", linewidth=2, label="Filtered mean")
+ax.plot(time, true_states, "b--", linewidth=1.5, label="True state", alpha=0.8)
+ax.plot(time, observations, "r.", markersize=3, label="Observations", alpha=0.4)
+
+ax.set_xlabel("Time step")
+ax.set_ylabel("Value")
+ax.set_title("Kalman Filter: Recovering Hidden States from Noisy Observations")
+ax.legend(loc="upper left")
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+### Posterior Distributions
+
+```{python}
+#| label: plot-posteriors
+#| echo: true
+#| fig-cap: "Posterior distributions for noise parameters"
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+# Process noise
+az.plot_posterior(
+    trace,
+    var_names=["process_noise"],
+    ax=axes[0],
+    ref_val=0.2,  # True value
+)
+axes[0].set_title("Process Noise")
+
+# Measurement noise
+az.plot_posterior(
+    trace,
+    var_names=["measurement_noise"],
+    ax=axes[1],
+    ref_val=0.8,  # True value
+)
+axes[1].set_title("Measurement Noise")
+
+plt.tight_layout()
+plt.show()
+```
+
+## Results as a Polars DataFrame
+
+For downstream analysis, we can organize results in a tidy format:
+
+```{python}
+#| label: polars-results
+#| echo: true
+
+# Create a tidy DataFrame with results
+results_df = pl.DataFrame({
+    "timestep": list(range(len(observations))),
+    "true_state": true_states.tolist(),
+    "observation": observations.tolist(),
+    "filtered_mean": filtered["mean"].tolist(),
+    "filtered_lower": filtered["lower"].tolist(),
+    "filtered_upper": filtered["upper"].tolist(),
+})
+
+# Add derived columns
+results_df = results_df.with_columns([
+    (pl.col("filtered_mean") - pl.col("true_state")).alias("error"),
+    ((pl.col("true_state") >= pl.col("filtered_lower")) &
+     (pl.col("true_state") <= pl.col("filtered_upper"))).alias("in_ci"),
+])
+
+print(results_df.head(10))
+```
+
+```{python}
+#| label: summary-stats
+#| echo: true
+
+# Summary statistics using Polars
+print("\nFilter Performance:")
+print(f"  RMSE: {np.sqrt((results_df['error'] ** 2).mean()):.4f}")
+print(f"  MAE: {results_df['error'].abs().mean():.4f}")
+print(f"  CI Coverage: {results_df['in_ci'].mean():.1%}")
+```
+
+## Key Insights
+
+1. **The filter successfully recovers the hidden states** despite significant
+   measurement noise
+
+2. **Uncertainty is properly quantified** - the credible intervals contain the
+   true states ~94% of the time
+
+3. **Noise parameters are learned** - the model correctly estimates both
+   process and measurement noise
+
+4. **Modern tooling makes this accessible** - PyMC handles the complex MCMC
+   sampling, we just specify the model
+
+## Exercises
+
+Try modifying the code above to explore:
+
+1. **Change noise levels**: What happens when `measurement_noise >> process_noise`?
+
+2. **Fewer observations**: How does the filter perform with only 20 time points?
+
+3. **Informative priors**: What if you use strong priors that are wrong?
+
+```{python}
+#| label: exercise-space
+#| echo: true
+#| eval: false
+
+# Exercise 1: High measurement noise
+states, obs = simulate_noisy_trajectory(
+    n_steps=100,
+    process_noise=0.1,
+    measurement_noise=2.0,  # Much noisier
+    seed=42,
+)
+# TODO: Fit and plot
+
+# Exercise 2: Fewer observations
+# TODO: Try with n_steps=20
+
+# Exercise 3: Wrong priors
+# TODO: Use process_variance_prior=10.0 when true value is 0.1
+```
+
+## Next Steps
+
+In the next notebook, we'll dive deeper into **diagnostics**:
+
+- Checking MCMC convergence
+- Evaluating filter performance
+- Generating reports
+
+Continue to [03_diagnostics.qmd](03_diagnostics.qmd)

@@ -1,0 +1,184 @@
+"""Snakemake workflow for Kalman filter parameter sweep experiments.
+
+This workflow demonstrates how to run systematic experiments across
+a parameter grid and aggregate results into a reproducible report.
+
+Usage:
+    # Run all experiments
+    snakemake --cores 4
+
+    # Dry run to see what would be executed
+    snakemake -n
+
+    # Generate DAG visualization
+    snakemake --dag | dot -Tpng > dag.png
+
+    # Run specific experiment
+    snakemake results/exp_proc0.1_meas0.5.parquet
+"""
+
+import itertools
+from pathlib import Path
+
+# Load configuration
+configfile: "workflow/config/params.yaml"
+
+# Extract parameter grid
+PROCESS_NOISE = config["parameter_grid"]["process_noise"]
+MEASUREMENT_NOISE = config["parameter_grid"]["measurement_noise"]
+
+# Generate all experiment combinations
+EXPERIMENTS = [
+    f"proc{p}_meas{m}"
+    for p, m in itertools.product(PROCESS_NOISE, MEASUREMENT_NOISE)
+]
+
+
+# =============================================================================
+# Target rule: what we want to build
+# =============================================================================
+
+rule all:
+    """Build all outputs: experiment results and final report."""
+    input:
+        expand("results/exp_{exp}.parquet", exp=EXPERIMENTS),
+        "results/summary.parquet",
+        "docs/results.html",
+
+
+# =============================================================================
+# Experiment rules
+# =============================================================================
+
+rule run_experiment:
+    """Run a single Kalman filter experiment with specified parameters."""
+    output:
+        "results/exp_{experiment}.parquet",
+    params:
+        n_steps=config["simulation"]["n_steps"],
+        seed=config["simulation"]["seed"],
+        n_samples=config["inference"]["n_samples"],
+        n_tune=config["inference"]["n_tune"],
+    resources:
+        # MCMC is memory-intensive
+        mem_mb=2000,
+    run:
+        # Parse experiment name to get parameters
+        # Format: proc{process_noise}_meas{measurement_noise}
+        parts = wildcards.experiment.split("_")
+        process_noise = float(parts[0].replace("proc", ""))
+        measurement_noise = float(parts[1].replace("meas", ""))
+
+        # Run the experiment
+        import polars as pl
+        from hive_protocol.data import simulate_noisy_trajectory
+        from hive_protocol.inference import (
+            fit_kalman_filter,
+            extract_filtered_states,
+            check_convergence,
+            compute_prediction_errors,
+            summarize_filter_performance,
+        )
+
+        # Simulate data
+        true_states, observations = simulate_noisy_trajectory(
+            n_steps=params.n_steps,
+            process_noise=process_noise,
+            measurement_noise=measurement_noise,
+            seed=params.seed,
+        )
+
+        # Fit model
+        _, trace = fit_kalman_filter(
+            observations,
+            n_samples=params.n_samples,
+            n_tune=params.n_tune,
+            random_seed=params.seed,
+        )
+
+        # Extract results
+        filtered = extract_filtered_states(trace)
+        convergence = check_convergence(trace)
+        errors_df = compute_prediction_errors(true_states, filtered)
+        performance = summarize_filter_performance(errors_df)
+
+        # Create results DataFrame
+        results = pl.DataFrame({
+            "experiment": [wildcards.experiment],
+            "process_noise": [process_noise],
+            "measurement_noise": [measurement_noise],
+            "n_steps": [params.n_steps],
+            "rmse": [performance["rmse"]],
+            "mae": [performance["mae"]],
+            "bias": [performance["bias"]],
+            "coverage": [performance["coverage"]],
+            "max_error": [performance["max_error"]],
+            "rhat_max": [convergence["rhat_max"]],
+            "ess_min": [convergence["ess_min"]],
+            "n_divergences": [convergence["n_divergences"]],
+            "converged": [convergence["converged"]],
+        })
+
+        # Save to Parquet (efficient columnar format)
+        results.write_parquet(output[0])
+        print(f"Saved results to {output[0]}")
+
+
+rule aggregate_results:
+    """Combine all experiment results into a single summary file."""
+    input:
+        expand("results/exp_{exp}.parquet", exp=EXPERIMENTS),
+    output:
+        "results/summary.parquet",
+    run:
+        import polars as pl
+
+        # Read and concatenate all results
+        dfs = [pl.read_parquet(f) for f in input]
+        summary = pl.concat(dfs)
+
+        # Sort for readability
+        summary = summary.sort(["process_noise", "measurement_noise"])
+
+        # Save combined results
+        summary.write_parquet(output[0])
+        print(f"Aggregated {len(input)} experiments into {output[0]}")
+
+
+rule render_report:
+    """Render the diagnostics notebook with experiment results."""
+    input:
+        summary="results/summary.parquet",
+        notebook="notebooks/03_diagnostics.qmd",
+    output:
+        "docs/results.html",
+    shell:
+        """
+        quarto render {input.notebook} \
+            --to html \
+            --output results.html \
+            --output-dir ../docs
+        """
+
+
+# =============================================================================
+# Utility rules
+# =============================================================================
+
+rule clean:
+    """Remove all generated files."""
+    shell:
+        """
+        rm -rf results/*.parquet
+        rm -rf docs/*.html
+        rm -rf .snakemake
+        """
+
+
+rule list_experiments:
+    """Print all experiment configurations."""
+    run:
+        print(f"Total experiments: {len(EXPERIMENTS)}")
+        print("\nExperiment configurations:")
+        for exp in EXPERIMENTS:
+            print(f"  - {exp}")

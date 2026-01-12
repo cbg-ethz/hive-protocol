@@ -1,0 +1,172 @@
+# Continuous Integration workflow
+# Runs on every push and pull request to ensure code quality
+#
+# This workflow demonstrates modern CI practices:
+# - Fast feedback with parallel jobs
+# - Matrix testing across Python versions and platforms
+# - Caching for speed
+# - Artifact uploads for test results
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  # Allow manual trigger
+  workflow_dispatch:
+
+# Cancel in-progress runs for the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Pixi settings
+  PIXI_VERSION: "0.39.5"
+
+jobs:
+  # ===========================================================================
+  # Code quality checks (fast)
+  # ===========================================================================
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pixi
+        uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: ${{ env.PIXI_VERSION }}
+          cache: true
+
+      - name: Run linter
+        run: pixi run lint
+
+      - name: Check formatting
+        run: pixi run format-check
+
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pixi
+        uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: ${{ env.PIXI_VERSION }}
+          cache: true
+
+      - name: Run mypy
+        run: pixi run typecheck
+
+  # ===========================================================================
+  # Tests (matrix across platforms)
+  # ===========================================================================
+  test:
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pixi
+        uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: ${{ env.PIXI_VERSION }}
+          cache: true
+
+      - name: Run tests with coverage
+        run: pixi run test-cov
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v4
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          file: coverage.xml
+          fail_ci_if_error: false
+
+  # ===========================================================================
+  # Build package
+  # ===========================================================================
+  build:
+    name: Build Package
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Need full history for version detection
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tools
+        run: pip install build
+
+      - name: Build package
+        run: python -m build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  # ===========================================================================
+  # Render documentation
+  # ===========================================================================
+  docs:
+    name: Build Docs
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pixi
+        uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: ${{ env.PIXI_VERSION }}
+          cache: true
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Render notebooks
+        run: pixi run docs
+
+      - name: Upload docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: docs/tutorials/
+
+  # ===========================================================================
+  # All checks passed
+  # ===========================================================================
+  ci-success:
+    name: CI Success
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test, build, docs]
+    if: always()
+    steps:
+      - name: Check all jobs passed
+        run: |
+          if [[ "${{ needs.lint.result }}" != "success" ]] || \
+             [[ "${{ needs.typecheck.result }}" != "success" ]] || \
+             [[ "${{ needs.test.result }}" != "success" ]] || \
+             [[ "${{ needs.build.result }}" != "success" ]] || \
+             [[ "${{ needs.docs.result }}" != "success" ]]; then
+            echo "One or more jobs failed"
+            exit 1
+          fi
+          echo "All CI checks passed!"

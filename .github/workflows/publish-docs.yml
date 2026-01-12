@@ -1,0 +1,79 @@
+# Publish documentation to GitHub Pages
+# Triggered on push to main branch or manual dispatch
+#
+# This workflow:
+# 1. Renders Quarto notebooks
+# 2. Deploys to GitHub Pages
+
+name: Publish Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'notebooks/**'
+      - 'docs/**'
+      - '.github/workflows/publish-docs.yml'
+  # Allow manual trigger
+  workflow_dispatch:
+
+# Grant GITHUB_TOKEN permissions for GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one deployment at a time
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+env:
+  PIXI_VERSION: "0.39.5"
+
+jobs:
+  build:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pixi
+        uses: prefix-dev/setup-pixi@v0.8.1
+        with:
+          pixi-version: ${{ env.PIXI_VERSION }}
+          cache: true
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Restore Quarto freeze cache
+        uses: actions/cache@v4
+        with:
+          path: notebooks/_freeze
+          key: quarto-freeze-${{ hashFiles('notebooks/**/*.qmd') }}
+          restore-keys: |
+            quarto-freeze-
+
+      - name: Render documentation
+        run: pixi run docs
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/tutorials
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

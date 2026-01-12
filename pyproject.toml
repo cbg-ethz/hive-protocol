@@ -1,0 +1,216 @@
+# pyproject.toml - Modern Python project configuration
+# This single file replaces setup.py, setup.cfg, requirements.txt, and more
+# See: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+
+[build-system]
+# Hatchling is the recommended build backend (PyPA default)
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hive-protocol"
+description = "The definitive protocol for Python in computational biology"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "CBG-ETH Zurich", email = "cbg@ethz.ch" },
+]
+keywords = [
+    "bayesian-inference",
+    "kalman-filter",
+    "computational-biology",
+    "pymc",
+    "state-space-models",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Typing :: Typed",
+]
+
+# Static version - update manually or use hatch-vcs when git is configured
+version = "0.1.0"
+
+# Core dependencies - minimal for library use
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pymc>=5.0",
+    "arviz>=0.15",
+    "polars>=0.20",
+]
+
+[project.optional-dependencies]
+# Development dependencies
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "hypothesis>=6.0",
+    "mypy>=1.0",
+    "ruff>=0.8.0",
+    "pre-commit>=3.0",
+]
+# Documentation dependencies
+docs = [
+    "quarto>=1.4",
+    "matplotlib>=3.7",
+    "seaborn>=0.12",
+]
+# Workflow dependencies
+workflow = [
+    "snakemake>=8.0",
+]
+# All optional dependencies
+all = [
+    "hive-protocol[dev,docs,workflow]",
+]
+
+[project.urls]
+Homepage = "https://github.com/cbg-ethz/hive-protocol"
+Documentation = "https://cbg-ethz.github.io/hive-protocol"
+Repository = "https://github.com/cbg-ethz/hive-protocol.git"
+Issues = "https://github.com/cbg-ethz/hive-protocol/issues"
+
+# =============================================================================
+# Build configuration
+# =============================================================================
+
+[tool.hatch.build.targets.sdist]
+# Include only source code in source distributions
+include = [
+    "/src",
+    "/tests",
+]
+
+[tool.hatch.build.targets.wheel]
+# Package only the src directory
+packages = ["src/hive_protocol"]
+
+# =============================================================================
+# Ruff - Fast Python linter and formatter (replaces black, flake8, isort)
+# =============================================================================
+
+[tool.ruff]
+# Same line length as Black for compatibility
+line-length = 88
+# Target Python 3.10+
+target-version = "py310"
+# Check all Python files
+include = ["*.py", "*.pyi"]
+# Exclude generated files
+exclude = [
+    "_version_generated.py",
+    ".git",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+# Select rule sets:
+# E: pycodestyle errors
+# F: Pyflakes
+# I: isort (import sorting)
+# B: flake8-bugbear (common bugs)
+# UP: pyupgrade (modernize syntax)
+# NPY: NumPy-specific rules
+# PD: pandas-vet (though we use Polars)
+# RUF: Ruff-specific rules
+select = ["E", "F", "I", "B", "UP", "NPY", "RUF"]
+
+# Ignore specific rules
+ignore = [
+    "E501",  # Line too long (handled by formatter)
+    "B008",  # Function call in default argument (needed for FastAPI)
+]
+
+[tool.ruff.lint.isort]
+# Group imports: standard library, third-party, local
+known-first-party = ["hive_protocol"]
+
+[tool.ruff.format]
+# Use double quotes (like Black)
+quote-style = "double"
+# Indent with spaces (like Black)
+indent-style = "space"
+
+# =============================================================================
+# Mypy - Static type checker
+# =============================================================================
+
+[tool.mypy]
+# Target Python version
+python_version = "3.10"
+# Check untyped functions
+warn_return_any = true
+warn_unused_ignores = true
+# Strict mode settings
+strict = false  # Start lenient, tighten over time
+# Allow imports without stubs
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# Ignore missing stubs for scientific libraries
+module = [
+    "pymc.*",
+    "arviz.*",
+    "polars.*",
+    "scipy.*",
+    "hypothesis.*",
+]
+ignore_missing_imports = true
+
+# =============================================================================
+# Pytest - Testing framework
+# =============================================================================
+
+[tool.pytest.ini_options]
+# Test discovery
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+# Useful options
+addopts = [
+    "-v",              # Verbose output
+    "--tb=short",      # Shorter tracebacks
+    "-ra",             # Show summary of all results
+    "--strict-markers",# Error on unknown markers
+]
+# Custom markers
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks integration tests",
+]
+# Filter warnings
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+# Coverage settings
+source = ["src/hive_protocol"]
+branch = true
+omit = [
+    "*/_version*.py",
+    "*/tests/*",
+]
+
+[tool.coverage.report]
+# Minimum coverage threshold
+fail_under = 70
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]

@@ -1,0 +1,27 @@
+{
+  "recommendations": [
+    // Python
+    "ms-python.python",           // Core Python extension
+    "ms-python.vscode-pylance",   // Pyright-based type checking (fast!)
+
+    // Formatting & Linting
+    "charliermarsh.ruff",         // Ruff - replaces Black, flake8, isort
+
+    // Notebooks & Documentation
+    "quarto.quarto",              // Quarto notebooks
+    "ms-toolsai.jupyter",         // Jupyter support
+
+    // Git
+    "eamodio.gitlens",            // Enhanced Git features
+
+    // YAML/TOML
+    "redhat.vscode-yaml",         // YAML support (Snakemake, GitHub Actions)
+    "tamasfe.even-better-toml"    // TOML support (pyproject.toml, pixi.toml)
+  ],
+  "unwantedRecommendations": [
+    // Disabled - Ruff replaces these
+    "ms-python.black-formatter",
+    "ms-python.flake8",
+    "ms-python.isort"
+  ]
+}

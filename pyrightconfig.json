@@ -1,0 +1,37 @@
+{
+  "// Comment": "Pyright configuration for local development (VS Code/Pylance)",
+  "// Note": "mypy is used in CI/pre-commit for stability; pyright locally for speed",
+
+  "include": ["src", "tests"],
+  "exclude": [
+    "**/__pycache__",
+    "**/node_modules",
+    ".pixi",
+    "build",
+    "dist",
+    "**/_version_generated.py"
+  ],
+
+  "pythonVersion": "3.11",
+  "pythonPlatform": "All",
+
+  "typeCheckingMode": "basic",
+
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "reportUnknownMemberType": false,
+  "reportUnknownParameterType": false,
+  "reportUnknownVariableType": false,
+  "reportUnknownArgumentType": false,
+  "reportPrivateUsage": false,
+  "reportUntypedFunctionDecorator": false,
+  "reportUntypedClassDecorator": false,
+  "reportUntypedBaseClass": false,
+
+  "executionEnvironments": [
+    {
+      "root": "src",
+      "extraPaths": ["src"]
+    }
+  ]
+}

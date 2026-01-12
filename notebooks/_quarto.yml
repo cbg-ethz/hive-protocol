@@ -1,0 +1,40 @@
+# Quarto project configuration for hive-protocol notebooks
+# See https://quarto.org/docs/projects/quarto-projects.html
+
+project:
+  title: "Hive-Protocol Tutorials"
+  type: website
+  output-dir: ../docs/tutorials
+
+website:
+  title: "Hive-Protocol"
+  description: "Modern Python for Computational Biology"
+  navbar:
+    left:
+      - text: "Introduction"
+        href: 01_introduction.qmd
+      - text: "Kalman Filter"
+        href: 02_kalman_filter.qmd
+      - text: "Diagnostics"
+        href: 03_diagnostics.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    code-tools: true
+    code-line-numbers: true
+    highlight-style: github
+
+execute:
+  # Cache expensive computations - only re-run when source changes
+  freeze: auto
+  # Show warnings in output (useful for learning)
+  warning: true
+  # Don't fail on error during development
+  error: false
+
+# Jupyter kernel configuration
+jupyter: python3

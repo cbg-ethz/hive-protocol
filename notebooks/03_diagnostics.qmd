@@ -1,0 +1,369 @@
+---
+title: "Posterior Diagnostics"
+subtitle: "Ensuring Reliable Bayesian Inference"
+author: "CBG-ETH Zurich"
+date: "2026-01-23"
+format:
+  html:
+    code-fold: false
+    toc: true
+execute:
+  freeze: auto
+jupyter: python3
+---
+
+## Why Diagnostics Matter
+
+MCMC sampling doesn't always work perfectly. Before trusting your results,
+you must verify:
+
+1. **Convergence**: Did the chains explore the posterior properly?
+2. **Efficiency**: Do we have enough effective samples?
+3. **No pathologies**: Are there divergences or other warnings?
+
+## Setup
+
+```{python}
+#| label: setup
+#| echo: true
+
+import numpy as np
+import polars as pl
+import matplotlib.pyplot as plt
+import arviz as az
+
+from hive_protocol.data import simulate_noisy_trajectory
+from hive_protocol.inference import (
+    fit_kalman_filter,
+    extract_filtered_states,
+    check_convergence,
+    compute_prediction_errors,
+    summarize_filter_performance,
+    generate_diagnostic_report,
+)
+```
+
+## Generate Test Data
+
+```{python}
+#| label: generate-data
+#| echo: true
+
+# Simulate data with known parameters
+true_states, observations = simulate_noisy_trajectory(
+    n_steps=80,
+    process_noise=0.3,
+    measurement_noise=0.6,
+    seed=123,
+)
+
+# Fit the model
+model, trace = fit_kalman_filter(
+    observations,
+    n_samples=1000,
+    n_tune=500,
+    random_seed=42,
+)
+
+# Extract filtered states
+filtered = extract_filtered_states(trace)
+```
+
+## Convergence Diagnostics
+
+### Automated Checks
+
+Our `check_convergence` function performs standard diagnostic tests:
+
+```{python}
+#| label: convergence-check
+#| echo: true
+
+report = check_convergence(trace)
+
+print("Convergence Report:")
+print(f"  Converged: {report['converged']}")
+print(f"  Max R-hat: {report['rhat_max']:.4f}")
+print(f"  Min ESS: {report['ess_min']}")
+print(f"  Divergences: {report['n_divergences']}")
+
+if report['warnings']:
+    print("\nWarnings:")
+    for w in report['warnings']:
+        print(f"  - {w}")
+else:
+    print("\nNo warnings - all diagnostics passed!")
+```
+
+### Understanding R-hat
+
+R-hat (potential scale reduction factor) measures chain convergence:
+
+- **R-hat ≈ 1.0**: Chains have converged
+- **R-hat > 1.01**: Chains may not have converged, need more samples
+
+```{python}
+#| label: rhat-plot
+#| echo: true
+#| fig-cap: "R-hat values across all parameters (should be < 1.01)"
+
+# Get summary with R-hat values
+summary = az.summary(trace)
+
+fig, ax = plt.subplots(figsize=(10, 4))
+rhats = summary["r_hat"].dropna().values
+params = summary["r_hat"].dropna().index.tolist()
+
+# Truncate parameter names for readability
+short_params = [p[:20] + "..." if len(p) > 20 else p for p in params]
+
+ax.barh(range(len(rhats)), rhats, color="steelblue")
+ax.axvline(x=1.01, color="red", linestyle="--", label="Threshold (1.01)")
+ax.set_yticks(range(len(rhats)))
+ax.set_yticklabels(short_params, fontsize=8)
+ax.set_xlabel("R-hat")
+ax.set_title("R-hat Convergence Diagnostic")
+ax.legend()
+plt.tight_layout()
+plt.show()
+```
+
+### Understanding ESS
+
+Effective Sample Size (ESS) tells us how many independent samples we have:
+
+- **ESS > 400**: Generally sufficient for reliable estimates
+- **ESS < 100**: Estimates may be unreliable
+
+```{python}
+#| label: ess-plot
+#| echo: true
+#| fig-cap: "Effective sample size (should be > 400 for bulk and tail)"
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+# Bulk ESS
+ess_bulk = summary["ess_bulk"].dropna()
+axes[0].hist(ess_bulk, bins=20, color="steelblue", edgecolor="white")
+axes[0].axvline(x=400, color="red", linestyle="--", label="Minimum (400)")
+axes[0].set_xlabel("ESS (bulk)")
+axes[0].set_ylabel("Count")
+axes[0].set_title("Bulk Effective Sample Size")
+axes[0].legend()
+
+# Tail ESS
+ess_tail = summary["ess_tail"].dropna()
+axes[1].hist(ess_tail, bins=20, color="steelblue", edgecolor="white")
+axes[1].axvline(x=400, color="red", linestyle="--", label="Minimum (400)")
+axes[1].set_xlabel("ESS (tail)")
+axes[1].set_ylabel("Count")
+axes[1].set_title("Tail Effective Sample Size")
+axes[1].legend()
+
+plt.tight_layout()
+plt.show()
+```
+
+### Trace Plots
+
+Visual inspection of trace plots reveals sampling behavior:
+
+```{python}
+#| label: trace-plots
+#| echo: true
+#| fig-cap: "Trace plots for noise parameters - chains should mix well"
+
+az.plot_trace(trace, var_names=["process_noise", "measurement_noise"])
+plt.tight_layout()
+plt.show()
+```
+
+Good trace plots show:
+
+- **Mixing**: Chains explore the same region
+- **Stationarity**: No trends over time
+- **No "stuck" chains**: All chains move freely
+
+## Filter Performance
+
+When we have ground truth (simulations), we can evaluate accuracy:
+
+```{python}
+#| label: prediction-errors
+#| echo: true
+
+# Compute prediction errors
+errors_df = compute_prediction_errors(true_states, filtered)
+
+print(errors_df.head(10))
+```
+
+```{python}
+#| label: performance-summary
+#| echo: true
+
+# Summarize performance
+perf = summarize_filter_performance(errors_df)
+
+print("\nFilter Performance Metrics:")
+print(f"  RMSE (Root Mean Squared Error): {perf['rmse']:.4f}")
+print(f"  MAE (Mean Absolute Error): {perf['mae']:.4f}")
+print(f"  Bias (systematic over/under-estimation): {perf['bias']:.4f}")
+print(f"  Coverage (% true states in 94% CI): {perf['coverage']:.1%}")
+print(f"  Max Error: {perf['max_error']:.4f}")
+```
+
+### Visualizing Errors
+
+```{python}
+#| label: error-plot
+#| echo: true
+#| fig-cap: "Prediction errors over time"
+
+fig, axes = plt.subplots(2, 1, figsize=(12, 8), sharex=True)
+
+time = errors_df["timestep"].to_numpy()
+
+# Error over time
+axes[0].plot(time, errors_df["error"].to_numpy(), "b-", alpha=0.7)
+axes[0].axhline(y=0, color="black", linestyle="-", linewidth=0.5)
+axes[0].fill_between(time, -perf["rmse"], perf["rmse"], alpha=0.2, color="red",
+                      label=f"±RMSE ({perf['rmse']:.3f})")
+axes[0].set_ylabel("Error (estimate - true)")
+axes[0].set_title("Prediction Errors Over Time")
+axes[0].legend()
+axes[0].grid(True, alpha=0.3)
+
+# Absolute error
+axes[1].bar(time, errors_df["abs_error"].to_numpy(), color="steelblue", alpha=0.7)
+axes[1].axhline(y=perf["mae"], color="red", linestyle="--",
+                label=f"MAE ({perf['mae']:.3f})")
+axes[1].set_xlabel("Time step")
+axes[1].set_ylabel("Absolute Error")
+axes[1].set_title("Absolute Prediction Errors")
+axes[1].legend()
+axes[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+### Coverage Analysis
+
+The 94% credible interval should contain the true state ~94% of the time:
+
+```{python}
+#| label: coverage-analysis
+#| echo: true
+#| fig-cap: "Credible interval coverage - green indicates true state within CI"
+
+in_ci = errors_df["in_credible_interval"].to_numpy()
+
+fig, ax = plt.subplots(figsize=(12, 5))
+
+colors = ["green" if c else "red" for c in in_ci]
+ax.scatter(time, true_states, c=colors, s=20, alpha=0.7)
+ax.fill_between(time, filtered["lower"], filtered["upper"],
+                alpha=0.2, color="blue", label="94% Credible Interval")
+ax.plot(time, filtered["mean"], "b-", linewidth=1, label="Filtered mean")
+
+ax.set_xlabel("Time step")
+ax.set_ylabel("Value")
+ax.set_title(f"Coverage Analysis: {perf['coverage']:.1%} of true states in CI")
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.show()
+```
+
+## Generating Reports
+
+For documentation and reproducibility, generate a full diagnostic report:
+
+```{python}
+#| label: full-report
+#| echo: true
+
+report_text = generate_diagnostic_report(trace, true_states, filtered)
+print(report_text)
+```
+
+## Common Problems and Solutions
+
+### Problem 1: Low ESS
+
+**Symptom**: ESS < 100 for some parameters
+
+**Solutions**:
+- Increase `n_samples` and `n_tune`
+- Reparameterize the model
+- Use stronger priors
+
+### Problem 2: High R-hat
+
+**Symptom**: R-hat > 1.01 for some parameters
+
+**Solutions**:
+- Run chains longer
+- Check for multimodality
+- Simplify the model
+
+### Problem 3: Divergences
+
+**Symptom**: `n_divergences > 0`
+
+**Solutions**:
+- Increase `target_accept` in sampler
+- Reparameterize the model (e.g., non-centered parameterization)
+- Check for model misspecification
+
+## Best Practices Checklist
+
+Before publishing results, verify:
+
+- [ ] All R-hat values < 1.01
+- [ ] All ESS values > 400
+- [ ] No divergent transitions
+- [ ] Trace plots show good mixing
+- [ ] Posterior predictive checks pass
+- [ ] Credible interval coverage is reasonable
+
+```{python}
+#| label: final-check
+#| echo: true
+
+# Automated checklist
+convergence = check_convergence(trace)
+
+print("Diagnostic Checklist:")
+print(f"  [{'x' if convergence['rhat_max'] < 1.01 else ' '}] R-hat < 1.01")
+print(f"  [{'x' if convergence['ess_min'] > 400 else ' '}] ESS > 400")
+print(f"  [{'x' if convergence['n_divergences'] == 0 else ' '}] No divergences")
+print(f"  [{'x' if perf['coverage'] > 0.85 else ' '}] Coverage > 85%")
+
+all_passed = (
+    convergence['rhat_max'] < 1.01 and
+    convergence['ess_min'] > 400 and
+    convergence['n_divergences'] == 0 and
+    perf['coverage'] > 0.85
+)
+
+if all_passed:
+    print("\n All checks passed! Results are reliable.")
+else:
+    print("\n Some checks failed. Review diagnostics before using results.")
+```
+
+## Summary
+
+In this tutorial, we learned:
+
+1. **R-hat and ESS** are essential convergence diagnostics
+2. **Trace plots** provide visual confirmation of mixing
+3. **Coverage analysis** validates uncertainty quantification
+4. **Automated reports** document analysis quality
+
+These practices ensure your Bayesian analyses are reliable and reproducible.
+
+---
+
+*This concludes the Hive-Protocol tutorial series. Happy modeling!*

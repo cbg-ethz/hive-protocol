@@ -1,0 +1,131 @@
+# Pre-commit configuration
+# Runs automated checks before each commit to maintain code quality
+#
+# Setup:
+#   pixi run hooks          # Install hooks
+#   pixi run hooks-all      # Run on all files
+#
+# Or with pre-commit directly:
+#   pre-commit install      # Install hooks
+#   pre-commit run --all    # Run on all files
+#
+# See: https://pre-commit.com/
+
+# Use a consistent version of pre-commit hooks
+default_language_version:
+  python: python3.11
+
+# Run hooks in parallel for speed
+ci:
+  autofix_prs: true
+  autoupdate_schedule: monthly
+
+repos:
+  # ==========================================================================
+  # General file checks
+  # ==========================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      # Prevent large files from being committed
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+
+      # Check for files that would conflict on case-insensitive filesystems
+      - id: check-case-conflict
+
+      # Check for merge conflict markers
+      - id: check-merge-conflict
+
+      # Ensure files end with a newline
+      - id: end-of-file-fixer
+
+      # Remove trailing whitespace
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+
+      # Check YAML syntax
+      - id: check-yaml
+        args: [--unsafe]  # Allow custom tags in YAML
+
+      # Check TOML syntax
+      - id: check-toml
+
+      # Check for private keys
+      - id: detect-private-key
+
+      # Don't commit directly to main
+      - id: no-commit-to-branch
+        args: [--branch, main]
+
+  # ==========================================================================
+  # Python code quality - Ruff (replaces black, flake8, isort)
+  # ==========================================================================
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.4
+    hooks:
+      # Linting with auto-fix
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        types_or: [python, pyi]
+
+      # Formatting (replaces black)
+      - id: ruff-format
+        types_or: [python, pyi]
+
+  # ==========================================================================
+  # Type checking - Mypy
+  # ==========================================================================
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.13.0
+    hooks:
+      - id: mypy
+        # Only check our source code
+        files: ^src/
+        # Additional type stubs
+        additional_dependencies:
+          - numpy
+          - types-PyYAML
+        # Use pyproject.toml configuration
+        args: [--config-file, pyproject.toml]
+
+  # ==========================================================================
+  # Notebook hygiene - Strip outputs before commit
+  # ==========================================================================
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
+    hooks:
+      - id: nbstripout
+        # Only strip Jupyter notebooks, not Quarto files
+        files: \.ipynb$
+
+  # ==========================================================================
+  # Security checks
+  # ==========================================================================
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package.lock.json
+
+  # ==========================================================================
+  # Documentation
+  # ==========================================================================
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.3.0
+    hooks:
+      - id: codespell
+        # Check spelling in code and docs
+        types_or: [python, markdown, rst]
+        # Ignore certain words that are false positives
+        args: [--ignore-words-list, "hist,nd,ans"]
+
+  # ==========================================================================
+  # Commit message formatting
+  # ==========================================================================
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v3.30.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
