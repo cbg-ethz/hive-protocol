@@ -2,7 +2,7 @@
 
 **The definitive protocol for Python in computational biology**
 
-A template repository demonstrating modern Python standards for computational biology research. Created for the D-BSSE Wise Symposium workshop at CBG-ETH Zurich (January 21-23, 2026).
+A template repository demonstrating modern Python standards for computational biology research. Created for the CBG Retreat 2026 at ETH Zurich (January 21-23, 2026).
 
 ---
 
