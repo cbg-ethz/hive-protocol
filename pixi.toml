@@ -108,8 +108,8 @@ hooks-all = "pre-commit run --all-files"
 # Register Jupyter kernel for Quarto
 kernel = "python -m ipykernel install --user --name python3 --display-name 'Python 3 (hive-protocol)'"
 
-# Render Quarto notebooks (registers kernel first)
-docs = { cmd = "quarto render notebooks/", depends-on = ["kernel"] }
+# Render Quarto notebooks and copy to docs/tutorials
+docs = { cmd = "quarto render notebooks/ && rm -rf docs/tutorials && mv notebooks/_site docs/tutorials", depends-on = ["kernel"] }
 
 # Run Snakemake workflow (dry run)
 workflow-dry = "snakemake -n --snakefile workflow/Snakefile"

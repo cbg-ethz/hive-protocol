@@ -4,7 +4,8 @@
 project:
   title: "Hive-Protocol Tutorials"
   type: website
-  output-dir: ../docs/tutorials
+  # Output within notebooks directory, then use task to copy
+  output-dir: _site
 
 website:
   title: "Hive-Protocol"
