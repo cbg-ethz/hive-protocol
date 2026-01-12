@@ -161,10 +161,10 @@ def extract_filtered_states(
         >>> plt.plot(states['mean'], label='Filtered state')
     """
     # Get the states posterior samples
-    states_samples = trace.posterior["states"].values
+    states_samples = trace.posterior["states"].values  # type: ignore[attr-defined]
 
     # Flatten chains: (n_chains, n_samples, n_timesteps) -> (n_total, n_timesteps)
-    n_chains, n_samples, n_timesteps = states_samples.shape
+    *_, n_timesteps = states_samples.shape
     states_flat = states_samples.reshape(-1, n_timesteps)
 
     # Compute summary statistics

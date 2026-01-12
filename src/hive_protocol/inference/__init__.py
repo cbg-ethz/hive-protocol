@@ -24,11 +24,11 @@ from hive_protocol.inference.kalman import (
 )
 
 __all__ = [
-    "fit_kalman_filter",
-    "extract_filtered_states",
-    "get_noise_estimates",
     "check_convergence",
     "compute_prediction_errors",
-    "summarize_filter_performance",
+    "extract_filtered_states",
+    "fit_kalman_filter",
     "generate_diagnostic_report",
+    "get_noise_estimates",
+    "summarize_filter_performance",
 ]

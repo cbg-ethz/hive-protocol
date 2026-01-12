@@ -10,7 +10,8 @@ Tests cover:
 
 import numpy as np
 import pytest
-from hypothesis import given, settings, strategies as st
+from hypothesis import given, settings
+from hypothesis import strategies as st
 from hypothesis.extra.numpy import arrays
 
 from hive_protocol.inference.kalman import (
@@ -86,9 +87,7 @@ class TestFitKalmanFilterOutput:
         # Shape is (chains, draws, timesteps)
         assert states.shape[-1] == len(simple_observations)
 
-    def test_reproducibility_with_seed(
-        self, simple_observations: np.ndarray
-    ) -> None:
+    def test_reproducibility_with_seed(self, simple_observations: np.ndarray) -> None:
         """Same random_seed should produce identical results."""
         _, trace1 = fit_kalman_filter(
             simple_observations,
@@ -209,9 +208,7 @@ class TestKalmanFilterHypothesis:
         )
     )
     @settings(max_examples=5, deadline=60000)  # 60s deadline for MCMC
-    def test_filter_output_length_matches_input(
-        self, observations: np.ndarray
-    ) -> None:
+    def test_filter_output_length_matches_input(self, observations: np.ndarray) -> None:
         """Filtered states should match observation length."""
         # Skip if any NaN (Hypothesis can generate edge cases)
         if np.any(np.isnan(observations)):

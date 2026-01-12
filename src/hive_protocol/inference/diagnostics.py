@@ -17,7 +17,6 @@ Example:
     >>> print(f"All chains converged: {report['converged']}")
 """
 
-import warnings
 from typing import Any
 
 import arviz as az
@@ -77,8 +76,7 @@ def check_convergence(
     ess_min = int(np.nanmin(ess_values))
     if ess_min < ess_threshold:
         warnings_list.append(
-            f"ESS too low: {ess_min} < {ess_threshold} "
-            "(consider running more samples)"
+            f"ESS too low: {ess_min} < {ess_threshold} (consider running more samples)"
         )
 
     # Check for divergences (NUTS-specific)
@@ -185,7 +183,7 @@ def summarize_filter_performance(
     rmse = float(np.sqrt(np.mean(errors**2)))
     mae = float(np.mean(abs_errors))
     bias = float(np.mean(errors))
-    coverage = float(errors_df["in_credible_interval"].mean())
+    coverage = float(errors_df["in_credible_interval"].mean())  # type: ignore[arg-type]
     max_error = float(np.max(abs_errors))
 
     return {

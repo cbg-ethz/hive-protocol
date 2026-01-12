@@ -61,7 +61,7 @@ jobs:
           cache: true
 
       - name: Run mypy
-        run: pixi run typecheck
+        run: pixi run typecheck-ci
 
   # ===========================================================================
   # Tests (matrix across platforms)

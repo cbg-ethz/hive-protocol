@@ -90,9 +90,7 @@ class TestComputePredictionErrors:
     @pytest.fixture
     def test_data(self):
         """Generate test data with known true states."""
-        true_states, observations = simulate_noisy_trajectory(
-            n_steps=30, seed=42
-        )
+        true_states, observations = simulate_noisy_trajectory(n_steps=30, seed=42)
         _, trace = fit_kalman_filter(
             observations,
             n_samples=50,
@@ -133,9 +131,7 @@ class TestComputePredictionErrors:
         true_states, filtered = test_data
         result = compute_prediction_errors(true_states, filtered)
         expected_error = filtered["mean"] - true_states
-        np.testing.assert_array_almost_equal(
-            result["error"].to_numpy(), expected_error
-        )
+        np.testing.assert_array_almost_equal(result["error"].to_numpy(), expected_error)
 
     def test_abs_error_is_positive(self, test_data) -> None:
         """Absolute error should be non-negative."""
@@ -159,9 +155,7 @@ class TestSummarizeFilterPerformance:
     @pytest.fixture
     def errors_df(self):
         """Generate errors DataFrame for testing."""
-        true_states, observations = simulate_noisy_trajectory(
-            n_steps=30, seed=42
-        )
+        true_states, observations = simulate_noisy_trajectory(n_steps=30, seed=42)
         _, trace = fit_kalman_filter(
             observations,
             n_samples=50,
@@ -212,9 +206,7 @@ class TestGenerateDiagnosticReport:
     @pytest.fixture
     def test_data(self):
         """Generate test data for report."""
-        true_states, observations = simulate_noisy_trajectory(
-            n_steps=30, seed=42
-        )
+        true_states, observations = simulate_noisy_trajectory(n_steps=30, seed=42)
         _, trace = fit_kalman_filter(
             observations,
             n_samples=50,

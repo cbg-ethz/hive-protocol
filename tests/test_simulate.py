@@ -10,7 +10,8 @@ Tests cover:
 import numpy as np
 import polars as pl
 import pytest
-from hypothesis import given, settings, strategies as st
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 from hive_protocol.data import simulate_noisy_trajectory
 from hive_protocol.data.simulate import (
@@ -130,9 +131,7 @@ class TestSimulateMultipleTrajectories:
         """DataFrame should have n_trajectories * n_steps rows."""
         n_traj = 5
         n_steps = 20
-        result = simulate_multiple_trajectories(
-            n_trajectories=n_traj, n_steps=n_steps
-        )
+        result = simulate_multiple_trajectories(n_trajectories=n_traj, n_steps=n_steps)
         assert len(result) == n_traj * n_steps
 
     def test_expected_columns(self) -> None:
@@ -151,9 +150,7 @@ class TestSimulateMultipleTrajectories:
     def test_trajectory_ids_are_correct(self) -> None:
         """Each trajectory should have unique consecutive ID."""
         n_traj = 4
-        result = simulate_multiple_trajectories(
-            n_trajectories=n_traj, n_steps=10
-        )
+        result = simulate_multiple_trajectories(n_trajectories=n_traj, n_steps=10)
         trajectory_ids = result["trajectory_id"].unique().sort()
         expected = pl.Series(list(range(n_traj)))
         assert trajectory_ids.to_list() == expected.to_list()
