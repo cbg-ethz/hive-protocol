@@ -162,170 +162,266 @@ pixi run test
 
 **Goal:** Everyone has a working environment.
 
-# Example: Bayesian Inference {background-color="#A23B72"}
+# Example Content: Bayesian Kalman Filter {background-color="#A23B72"}
 
-## What is Bayesian Inference?
-
-::: {.columns}
-::: {.column width="60%"}
-### The formula
-
-$$P(\theta | \text{data}) \propto P(\text{data} | \theta) \cdot P(\theta)$$
-
-- **Prior** $P(\theta)$: What we believe before seeing data
-- **Likelihood** $P(\text{data} | \theta)$: How likely is the data given parameters
-- **Posterior** $P(\theta | \text{data})$: Updated belief after seeing data
-:::
-
-::: {.column width="40%"}
-### Why Bayesian?
-
-- Quantified uncertainty
-- Incorporates prior knowledge
-- Works with small samples
-- Natural for sequential updating
-:::
-:::
-
-## The Kalman Filter Problem
+## The Example: State-Space Model
 
 ::: {.columns}
 ::: {.column width="50%"}
-### Hidden states
+### The problem
 
-We can't directly observe what we care about.
-
-**Examples:**
-
-- True position (GPS noise)
-- Gene expression level (measurement error)
-- Cell location (tracking noise)
-:::
-
-::: {.column width="50%"}
-### State-space model
-
-$$x_t = x_{t-1} + \epsilon_t \quad \text{(process)}$$
-$$y_t = x_t + \eta_t \quad \text{(observation)}$$
-
-- $x_t$: Hidden true state
-- $y_t$: Noisy observation
-- $\epsilon_t$: Process noise
-- $\eta_t$: Measurement noise
-:::
-:::
-
-## PyMC Syntax
-
-```python
-import pymc as pm
-
-with pm.Model() as model:
-    # Priors
-    process_var = pm.HalfNormal("process_var", sigma=1.0)
-    obs_var = pm.HalfNormal("obs_var", sigma=1.0)
-
-    # State evolution (random walk)
-    states = pm.GaussianRandomWalk(
-        "states",
-        sigma=pm.math.sqrt(process_var),
-        shape=n_steps,
-    )
-
-    # Observations
-    pm.Normal("obs", mu=states, sigma=pm.math.sqrt(obs_var), observed=y)
-
-    # Inference
-    trace = pm.sample(1000, tune=500)
-```
-
-## Diagnostics Matter
-
-::: {.columns}
-::: {.column width="50%"}
-### Key metrics
-
-- **R-hat** < 1.01: Chains converged
-- **ESS** > 400: Enough independent samples
-- **Divergences** = 0: No numerical issues
-
-### The rule
-
-> "If you don't check diagnostics, you don't have results."
-:::
-
-::: {.column width="50%"}
-### In code
-
-```python
-from hive_protocol.inference import (
-    check_convergence,
-    generate_diagnostic_report,
-)
-
-# Quick check
-is_ok, issues = check_convergence(trace)
-
-# Full report
-print(generate_diagnostic_report(
-    trace, true_states, filtered_states
-))
-```
-:::
-:::
-
-## Polars for Results
-
-::: {.columns}
-::: {.column width="50%"}
-### Why not pandas?
-
-- 5-50x faster for large data
-- Lazy evaluation (query optimization)
-- Consistent API
-- Better memory efficiency
-:::
-
-::: {.column width="50%"}
-### Example
-
-```python
-import polars as pl
-
-# Lazy evaluation
-results = (
-    pl.scan_parquet("results/*.parquet")
-    .filter(pl.col("r_hat") < 1.01)
-    .group_by("scenario")
-    .agg(pl.col("rmse").mean())
-    .collect()  # Execute here
-)
-```
-:::
-:::
-
-## Hands-on: Kalman Filter
+Estimate hidden states from noisy observations using PyMC.
 
 ```python
 from hive_protocol.data import simulate_noisy_trajectory
-from hive_protocol.inference import (
-    fit_kalman_filter,
-    extract_filtered_states,
-    generate_diagnostic_report,
-)
+from hive_protocol.inference import fit_kalman_filter
 
-# Simulate data
-states, obs = simulate_noisy_trajectory(n_steps=50, seed=42)
-
-# Fit model
-model, trace = fit_kalman_filter(obs, n_samples=500)
-
-# Extract results
-filtered = extract_filtered_states(trace)
-
-# Check diagnostics
-print(generate_diagnostic_report(trace, states, filtered))
+# Simulate and fit
+states, obs = simulate_noisy_trajectory(n_steps=50)
+model, trace = fit_kalman_filter(obs)
 ```
+
+*This is example content—replace with your domain logic.*
+:::
+
+::: {.column width="50%"}
+### Always check diagnostics
+
+- **R-hat** < 1.01: Chains converged
+- **ESS** > 400: Enough samples
+- **Divergences** = 0: No issues
+
+> "If you don't check diagnostics, you don't have results."
+:::
+:::
+
+# Testing & Type Safety {background-color="#A23B72"}
+
+## Type Checking: mypy vs Pyright
+
+::: {.columns}
+::: {.column width="50%"}
+### Why type hints?
+
+```python
+# Without types - what does this return?
+def process(data, threshold):
+    return [x for x in data if x > threshold]
+
+# With types - crystal clear
+def process(
+    data: list[float],
+    threshold: float,
+) -> list[float]:
+    return [x for x in data if x > threshold]
+```
+
+Catch bugs **before** runtime. Document intent.
+:::
+
+::: {.column width="50%"}
+### Two tools, two purposes
+
+| Tool | Use Case |
+|------|----------|
+| **Pyright** | Local dev (fast, strict) |
+| **mypy** | CI/pre-commit (stable) |
+
+```bash
+# Fast feedback while coding
+pixi run typecheck      # pyright
+
+# Stable checks in CI
+pixi run typecheck-ci   # mypy
+```
+:::
+:::
+
+## Pyright: Fast Local Feedback
+
+::: {.columns}
+::: {.column width="50%"}
+### Speed matters
+
+- Written in TypeScript
+- Checks large codebases in seconds
+- Excellent VS Code integration (Pylance)
+
+### Strict mode available
+
+```bash
+pixi run typecheck-strict
+```
+
+Catches more issues but requires more annotations.
+:::
+
+::: {.column width="50%"}
+### VS Code integration
+
+```json
+// .vscode/settings.json
+{
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.diagnosticMode": "workspace"
+}
+```
+
+Real-time feedback as you type.
+
+Hover over variables to see inferred types.
+:::
+:::
+
+## mypy: Stable CI Checks
+
+::: {.columns}
+::: {.column width="50%"}
+### Why mypy for CI?
+
+- Battle-tested, stable
+- Extensive plugin ecosystem
+- Well-documented error messages
+- Industry standard
+
+### Configuration in pyproject.toml
+
+```toml
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_ignores = true
+```
+:::
+
+::: {.column width="50%"}
+### Pre-commit integration
+
+```yaml
+# .pre-commit-config.yaml
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v1.8.0
+  hooks:
+    - id: mypy
+      additional_dependencies:
+        - numpy
+        - polars
+```
+
+Runs on every commit. No type errors reach main.
+:::
+:::
+
+## Hypothesis: Property-Based Testing
+
+::: {.columns}
+::: {.column width="50%"}
+### The problem with example-based tests
+
+```python
+# You pick the examples
+def test_sort():
+    assert sort([3, 1, 2]) == [1, 2, 3]
+    assert sort([]) == []
+    assert sort([1]) == [1]
+    # Did you think of all edge cases?
+```
+
+You test what you think of. Bugs hide in what you don't.
+:::
+
+::: {.column width="50%"}
+### Hypothesis generates test cases
+
+```python
+from hypothesis import given, strategies as st
+
+@given(st.lists(st.integers()))
+def test_sort_properties(xs):
+    result = sort(xs)
+    # Property: length preserved
+    assert len(result) == len(xs)
+    # Property: sorted order
+    assert all(a <= b for a, b in zip(result, result[1:]))
+    # Property: same elements
+    assert sorted(xs) == result
+```
+:::
+:::
+
+## Hypothesis Strategies
+
+::: {.columns}
+::: {.column width="50%"}
+### Built-in strategies
+
+```python
+from hypothesis import strategies as st
+
+# Primitives
+st.integers(min_value=0, max_value=100)
+st.floats(allow_nan=False)
+st.text(min_size=1)
+st.booleans()
+
+# Collections
+st.lists(st.integers(), min_size=1)
+st.dictionaries(st.text(), st.integers())
+
+# Combine them
+st.tuples(st.integers(), st.text())
+```
+:::
+
+::: {.column width="50%"}
+### NumPy arrays
+
+```python
+from hypothesis.extra.numpy import arrays
+import numpy as np
+
+@given(arrays(
+    dtype=np.float64,
+    shape=st.tuples(
+        st.integers(1, 100),
+        st.integers(1, 10),
+    ),
+    elements=st.floats(-1e6, 1e6, allow_nan=False),
+))
+def test_matrix_properties(arr):
+    # Test with random matrices
+    assert arr.shape[0] >= 1
+```
+:::
+:::
+
+## Hypothesis in Practice
+
+```python
+from hypothesis import given, strategies as st, settings
+import numpy as np
+
+@given(
+    n_steps=st.integers(min_value=10, max_value=100),
+    process_noise=st.floats(min_value=0.01, max_value=1.0),
+)
+@settings(max_examples=50)  # Limit for slow tests
+def test_kalman_filter_properties(n_steps, process_noise):
+    """Test that Kalman filter has expected properties."""
+    states, obs = simulate_noisy_trajectory(
+        n_steps=n_steps,
+        process_noise=process_noise,
+        seed=42,
+    )
+
+    # Property: observations should be noisier than states
+    assert np.std(obs) >= np.std(states) * 0.5
+
+    # Property: lengths match
+    assert len(states) == len(obs) == n_steps
+```
+
+**Key insight:** Test *properties* that must always hold, not specific values.
 
 # Workflows & Quality {background-color="#F18F01"}
 
@@ -486,24 +582,24 @@ git push -u origin demo/my-feature
 | Topic | Key Takeaway |
 |-------|--------------|
 | Foundations | Use pixi + Ruff for 10-100x speedup |
-| Bayesian Example | Always check diagnostics |
+| Type Safety | Pyright for local dev, mypy for CI |
+| Testing | Hypothesis finds bugs you didn't think of |
 | Workflows | Automate quality with CI/CD |
 
 ## Resources
 
 - **Repository:** [github.com/cbg-ethz/hive-protocol](https://github.com/cbg-ethz/hive-protocol)
 - **Tutorial:** `docs/TUTORIAL.md`
-- **Learning Path:** `docs/LEARNING_PATH.md`
 - **Pixi:** [pixi.sh](https://pixi.sh)
-- **PyMC:** [pymc.io](https://www.pymc.io)
 - **Ruff:** [docs.astral.sh/ruff](https://docs.astral.sh/ruff)
+- **Hypothesis:** [hypothesis.readthedocs.io](https://hypothesis.readthedocs.io)
+- **Pyright:** [github.com/microsoft/pyright](https://github.com/microsoft/pyright)
 
 ## Next Steps
 
 1. **Today:** Fork the repository
 2. **This week:** Adapt it to your project
-3. **This month:** Follow the learning path
-4. **Ongoing:** Share with your lab
+3. **Ongoing:** Share with your lab
 
 . . .
 

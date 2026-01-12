@@ -120,11 +120,10 @@ For the January 2026 workshop:
 
 - **[slides.qmd](docs/slides.qmd)** - Presentation slides (Quarto reveal.js)
 - **[TUTORIAL.md](docs/TUTORIAL.md)** - Step-by-step guide for participants
-- **[LEARNING_PATH.md](docs/LEARNING_PATH.md)** - 4-week progression
 
 Render slides with:
 ```bash
-quarto render docs/slides.qmd
+pixi run slides
 ```
 
 ## Fork and Customize
