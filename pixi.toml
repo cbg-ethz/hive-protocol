@@ -50,6 +50,8 @@ pre-commit = ">=3.0"
 
 # Documentation
 quarto = ">=1.4"
+ipykernel = ">=6.0"    # Required for Quarto to find Python kernel
+jupyter = ">=1.0"
 
 # Type checking
 mypy = ">=1.0"      # Used in CI/pre-commit for stability
@@ -103,8 +105,11 @@ hooks = "pre-commit install"
 # Run pre-commit on all files
 hooks-all = "pre-commit run --all-files"
 
-# Render Quarto notebooks
-docs = "quarto render notebooks/"
+# Register Jupyter kernel for Quarto
+kernel = "python -m ipykernel install --user --name python3 --display-name 'Python 3 (hive-protocol)'"
+
+# Render Quarto notebooks (registers kernel first)
+docs = { cmd = "quarto render notebooks/", depends-on = ["kernel"] }
 
 # Run Snakemake workflow (dry run)
 workflow-dry = "snakemake -n --snakefile workflow/Snakefile"
