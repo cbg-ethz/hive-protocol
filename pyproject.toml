@@ -4,7 +4,8 @@
 
 [build-system]
 # Hatchling is the recommended build backend (PyPA default)
-requires = ["hatchling"]
+# hatch-vcs enables automatic versioning from git tags
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
@@ -36,8 +37,8 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# Static version - update manually or use hatch-vcs when git is configured
-version = "0.1.0"
+# Version is dynamically determined from git tags (e.g., v0.1.0 -> 0.1.0)
+dynamic = ["version"]
 
 # Core dependencies - minimal for library use
 dependencies = [
@@ -82,6 +83,18 @@ Issues = "https://github.com/cbg-ethz/hive-protocol/issues"
 # =============================================================================
 # Build configuration
 # =============================================================================
+
+[tool.hatch.version]
+# Version from git tags (e.g., v0.1.0 -> 0.1.0)
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
+
+[tool.hatch.build.hooks.vcs]
+# Generate version file during build
+version-file = "src/hive_protocol/_version_generated.py"
 
 [tool.hatch.build.targets.sdist]
 # Include only source code in source distributions
