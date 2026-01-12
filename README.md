@@ -44,8 +44,8 @@ pixi run docs  # Render tutorial notebooks
 ### Package Management: [Pixi](https://pixi.sh/)
 Handles conda and PyPI packages seamlessly. Essential for bioinformatics where tools like samtools remain conda-only.
 
-### Bayesian Inference: [PyMC 5+](https://www.pymc.io/)
-Industry-leading probabilistic programming. The Kalman filter example demonstrates state-space modeling.
+### Bayesian Inference: [PyMC 5+](https://www.pymc.io/) *(content example)*
+Used here as example scientific content. The Kalman filter demonstrates state-space modeling—replace with your own domain logic.
 
 ### Data Processing: [Polars](https://pola.rs/)
 DataFrame library built in Rust. 5-50x faster than pandas with lazy evaluation.
