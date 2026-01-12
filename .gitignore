@@ -130,7 +130,11 @@ _freeze/
 
 # Generated documentation (except source)
 docs/tutorials/
+docs/slides.html
+docs/slides_files/
 !docs/*.md
+!docs/*.qmd
+!docs/*.scss
 
 # Snakemake
 .snakemake/

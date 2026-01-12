@@ -1,0 +1,512 @@
+---
+title: "Modern Python for Computational Biology"
+subtitle: "The Hive Protocol"
+author: "CBG Retreat 2026"
+date: "January 21-23, 2026"
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    slide-number: true
+    preview-links: auto
+    code-line-numbers: false
+    highlight-style: github
+    transition: fade
+    width: 1600
+    height: 900
+    footer: "CBG Retreat 2026 | ETH Zurich"
+execute:
+  echo: true
+  eval: false
+---
+
+# Day 1: Foundations {background-color="#2E86AB"}
+
+## The Problem
+
+::: {.columns}
+::: {.column width="50%"}
+### What we see in research code
+
+- `requirements.txt` with version conflicts
+- No tests ("I tested it manually")
+- No type hints
+- "Works on my machine"
+- Jupyter notebooks in git (merge nightmare)
+:::
+
+::: {.column width="50%"}
+### The cost
+
+- Hours debugging environment issues
+- Results that can't be reproduced
+- Code that only the author understands
+- Papers with broken supplementary code
+:::
+:::
+
+## The 2025 Landscape
+
+The Python ecosystem has matured. **Use the modern tools.**
+
+| Old Way | Modern Way | Benefit |
+|---------|------------|---------|
+| pip + requirements.txt | **pixi** | 10-100x faster, handles conda + PyPI |
+| Black + flake8 + isort | **Ruff** | Single tool, 30-100x faster |
+| pandas for everything | **Polars** | 5-50x faster for large data |
+| Jupyter notebooks | **Quarto** | Clean git diffs, reproducible |
+| Manual testing | **pytest + Hypothesis** | Property-based testing |
+
+## Why Pixi?
+
+::: {.columns}
+::: {.column width="60%"}
+### Bioinformatics needs conda
+
+- samtools, bedtools, bcftools
+- Many tools are conda-only
+- PyPI alone isn't enough
+
+### Pixi handles both
+
+```bash
+# Install everything in seconds
+pixi install
+
+# Run commands in the environment
+pixi run test
+pixi run lint
+```
+:::
+
+::: {.column width="40%"}
+### Speed comparison
+
+```
+Traditional setup:
+  conda create ... → 5 min
+  pip install ... → 2 min
+  conflicts ... → 30 min
+
+Pixi:
+  pixi install → 30 sec
+```
+:::
+:::
+
+## Why Ruff?
+
+::: {.columns}
+::: {.column width="50%"}
+### One tool replaces many
+
+- Black (formatting)
+- flake8 (linting)
+- isort (import sorting)
+- pyupgrade (syntax updates)
+- And 700+ lint rules
+
+### Written in Rust
+
+30-100x faster than Python equivalents
+:::
+
+::: {.column width="50%"}
+### Demo
+
+```bash
+# Check for issues
+pixi run ruff check src/
+
+# Auto-fix everything
+pixi run ruff check --fix src/
+pixi run ruff format src/
+```
+
+One command. Done.
+:::
+:::
+
+## Repository Structure
+
+```
+hive-protocol/
+├── src/hive_protocol/       # Source code (src layout)
+│   ├── inference/           # Kalman filter + diagnostics
+│   └── data/                # Data simulation
+├── tests/                   # pytest + Hypothesis tests
+├── notebooks/               # Quarto tutorials
+├── workflow/                # Snakemake pipeline
+├── docs/                    # Workshop materials
+├── pyproject.toml           # Single source of truth
+└── pixi.toml                # Environment specification
+```
+
+**Key principle:** `pyproject.toml` is the single source of truth for your project.
+
+## Hands-on: Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/cbg-ethz/hive-protocol.git
+cd hive-protocol
+
+# Install pixi (if needed)
+curl -fsSL https://pixi.sh/install.sh | bash
+
+# Set up environment
+pixi install
+
+# Verify it works
+pixi run test
+```
+
+**Goal:** Everyone has a working environment before Day 2.
+
+# Day 2: Bayesian Inference {background-color="#A23B72"}
+
+## What is Bayesian Inference?
+
+::: {.columns}
+::: {.column width="60%"}
+### The formula
+
+$$P(\theta | \text{data}) \propto P(\text{data} | \theta) \cdot P(\theta)$$
+
+- **Prior** $P(\theta)$: What we believe before seeing data
+- **Likelihood** $P(\text{data} | \theta)$: How likely is the data given parameters
+- **Posterior** $P(\theta | \text{data})$: Updated belief after seeing data
+:::
+
+::: {.column width="40%"}
+### Why Bayesian?
+
+- Quantified uncertainty
+- Incorporates prior knowledge
+- Works with small samples
+- Natural for sequential updating
+:::
+:::
+
+## The Kalman Filter Problem
+
+::: {.columns}
+::: {.column width="50%"}
+### Hidden states
+
+We can't directly observe what we care about.
+
+**Examples:**
+
+- True position (GPS noise)
+- Gene expression level (measurement error)
+- Cell location (tracking noise)
+:::
+
+::: {.column width="50%"}
+### State-space model
+
+$$x_t = x_{t-1} + \epsilon_t \quad \text{(process)}$$
+$$y_t = x_t + \eta_t \quad \text{(observation)}$$
+
+- $x_t$: Hidden true state
+- $y_t$: Noisy observation
+- $\epsilon_t$: Process noise
+- $\eta_t$: Measurement noise
+:::
+:::
+
+## PyMC Syntax
+
+```python
+import pymc as pm
+
+with pm.Model() as model:
+    # Priors
+    process_var = pm.HalfNormal("process_var", sigma=1.0)
+    obs_var = pm.HalfNormal("obs_var", sigma=1.0)
+
+    # State evolution (random walk)
+    states = pm.GaussianRandomWalk(
+        "states",
+        sigma=pm.math.sqrt(process_var),
+        shape=n_steps,
+    )
+
+    # Observations
+    pm.Normal("obs", mu=states, sigma=pm.math.sqrt(obs_var), observed=y)
+
+    # Inference
+    trace = pm.sample(1000, tune=500)
+```
+
+## Diagnostics Matter
+
+::: {.columns}
+::: {.column width="50%"}
+### Key metrics
+
+- **R-hat** < 1.01: Chains converged
+- **ESS** > 400: Enough independent samples
+- **Divergences** = 0: No numerical issues
+
+### The rule
+
+> "If you don't check diagnostics, you don't have results."
+:::
+
+::: {.column width="50%"}
+### In code
+
+```python
+from hive_protocol.inference import (
+    check_convergence,
+    generate_diagnostic_report,
+)
+
+# Quick check
+is_ok, issues = check_convergence(trace)
+
+# Full report
+print(generate_diagnostic_report(
+    trace, true_states, filtered_states
+))
+```
+:::
+:::
+
+## Polars for Results
+
+::: {.columns}
+::: {.column width="50%"}
+### Why not pandas?
+
+- 5-50x faster for large data
+- Lazy evaluation (query optimization)
+- Consistent API
+- Better memory efficiency
+:::
+
+::: {.column width="50%"}
+### Example
+
+```python
+import polars as pl
+
+# Lazy evaluation
+results = (
+    pl.scan_parquet("results/*.parquet")
+    .filter(pl.col("r_hat") < 1.01)
+    .group_by("scenario")
+    .agg(pl.col("rmse").mean())
+    .collect()  # Execute here
+)
+```
+:::
+:::
+
+## Hands-on: Kalman Filter
+
+```python
+from hive_protocol.data import simulate_noisy_trajectory
+from hive_protocol.inference import (
+    fit_kalman_filter,
+    extract_filtered_states,
+    generate_diagnostic_report,
+)
+
+# Simulate data
+states, obs = simulate_noisy_trajectory(n_steps=50, seed=42)
+
+# Fit model
+model, trace = fit_kalman_filter(obs, n_samples=500)
+
+# Extract results
+filtered = extract_filtered_states(trace)
+
+# Check diagnostics
+print(generate_diagnostic_report(trace, states, filtered))
+```
+
+# Day 3: Workflows & Quality {background-color="#F18F01"}
+
+## Git for Researchers
+
+::: {.columns}
+::: {.column width="50%"}
+### Feature branches
+
+```bash
+# Never commit directly to main
+git checkout -b feature/add-filter
+
+# Make changes, then
+git add .
+git commit -m "Add bandpass filter"
+
+# Merge via pull request
+git push -u origin feature/add-filter
+```
+:::
+
+::: {.column width="50%"}
+### Good commit messages
+
+**Bad:**
+```
+fix
+update
+changes
+```
+
+**Good:**
+```
+fix: correct off-by-one in filter
+feat: add bandpass filter option
+docs: update installation guide
+```
+:::
+:::
+
+## Pre-commit Hooks
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    hooks:
+      - id: mypy
+```
+
+**What happens:**
+
+1. You run `git commit`
+2. Pre-commit runs Ruff and mypy
+3. If issues found → commit blocked, auto-fixed
+4. You commit again → clean code only
+
+## GitHub Actions CI
+
+```yaml
+# .github/workflows/ci.yml
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.8.1
+      - run: pixi run test
+      - run: pixi run lint
+      - run: pixi run typecheck
+```
+
+Every push triggers automated testing.
+
+**Badge on README = instant trust.**
+
+## The Development Loop
+
+```{mermaid}
+flowchart LR
+    A[Branch] --> B[Code]
+    B --> C[Test]
+    C --> D[Commit]
+    D --> E[Push]
+    E --> F[PR]
+    F --> G[Review]
+    G --> H[Merge]
+    H --> A
+```
+
+1. Create feature branch
+2. Write code + tests
+3. Run `pixi run check`
+4. Commit (pre-commit runs)
+5. Push and create PR
+6. CI runs, review, merge
+
+## Fork and Customize
+
+::: {.columns}
+::: {.column width="50%"}
+### Steps
+
+1. **Fork** this repository
+2. **Rename** `hive_protocol` → your project
+3. **Update** `pyproject.toml` metadata
+4. **Replace** the Kalman filter with your code
+5. **Keep** testing + CI patterns
+:::
+
+::: {.column width="50%"}
+### What to keep
+
+- `src/` layout
+- `pyproject.toml` structure
+- Test organization
+- CI/CD workflows
+- Pre-commit configuration
+- Quarto notebooks pattern
+:::
+:::
+
+## Hands-on: Make a Change
+
+```bash
+# Create branch
+git checkout -b demo/my-feature
+
+# Edit something (e.g., add a docstring)
+# ...
+
+# Run checks
+pixi run check
+
+# Commit
+git add .
+git commit -m "docs: add docstring to function"
+
+# Watch pre-commit run!
+
+# Push
+git push -u origin demo/my-feature
+```
+
+# Summary {background-color="#2E86AB"}
+
+## What We Covered
+
+| Day | Topic | Key Takeaway |
+|-----|-------|--------------|
+| 1 | Foundations | Use pixi + Ruff for 10-100x speedup |
+| 2 | Bayesian Inference | Always check diagnostics |
+| 3 | Workflows | Automate quality with CI/CD |
+
+## Resources
+
+- **Repository:** [github.com/cbg-ethz/hive-protocol](https://github.com/cbg-ethz/hive-protocol)
+- **Tutorial:** `docs/TUTORIAL.md`
+- **Learning Path:** `docs/LEARNING_PATH.md`
+- **Pixi:** [pixi.sh](https://pixi.sh)
+- **PyMC:** [pymc.io](https://www.pymc.io)
+- **Ruff:** [docs.astral.sh/ruff](https://docs.astral.sh/ruff)
+
+## Next Steps
+
+1. **Today:** Fork the repository
+2. **This week:** Adapt it to your project
+3. **This month:** Follow the learning path
+4. **Ongoing:** Share with your lab
+
+. . .
+
+**Questions?**
+
+[github.com/cbg-ethz/hive-protocol](https://github.com/cbg-ethz/hive-protocol)

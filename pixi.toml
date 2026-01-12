@@ -112,6 +112,9 @@ kernel = "python -m ipykernel install --user --name python3 --display-name 'Pyth
 # Render Quarto notebooks and copy to docs/tutorials
 docs = { cmd = "quarto render notebooks/ && rm -rf docs/tutorials && mv notebooks/_site docs/tutorials", depends-on = ["kernel"] }
 
+# Render presentation slides
+slides = "quarto render docs/slides.qmd"
+
 # Run Snakemake workflow (dry run)
 workflow-dry = "snakemake -n --snakefile workflow/Snakefile"
 
