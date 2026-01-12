@@ -152,13 +152,33 @@ rule render_report:
         notebook="notebooks/03_diagnostics.qmd",
     output:
         "docs/results.html",
-    shell:
-        """
-        quarto render {input.notebook} \
-            --to html \
-            --output results.html \
-            --output-dir ../docs
-        """
+    run:
+        import subprocess
+        import sys
+        import os
+        import shutil
+        from pathlib import Path
+
+        # Get absolute paths
+        workdir = Path(workflow.basedir).parent  # repo root
+        notebook_path = workdir / input.notebook
+        notebook_dir = notebook_path.parent
+
+        # Ensure quarto uses the correct Python from pixi environment
+        env = os.environ.copy()
+        env["QUARTO_PYTHON"] = sys.executable
+
+        # Render to notebook directory
+        subprocess.run([
+            "quarto", "render", str(notebook_path),
+            "--to", "html",
+            "--output", "results.html"
+        ], check=True, env=env)
+
+        # Move output to docs/
+        src = notebook_dir / "results.html"
+        dst = workdir / "docs" / "results.html"
+        shutil.move(str(src), str(dst))
 
 
 # =============================================================================
