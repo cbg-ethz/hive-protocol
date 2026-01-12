@@ -67,5 +67,7 @@
     "**/.ruff_cache": true,
     "**/*.egg-info": true,
     ".pixi": true
-  }
+  },
+  "python-envs.defaultEnvManager": "ms-python.python:system",
+  "python-envs.pythonProjects": []
 }
