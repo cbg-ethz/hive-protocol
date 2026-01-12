@@ -5,6 +5,13 @@
   "python.defaultInterpreterPath": "${workspaceFolder}/.pixi/envs/default/bin/python",
 
   // ==========================================================================
+  // Jupyter / Interactive Window
+  // ==========================================================================
+  // Use the pixi environment for Jupyter kernels
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+  "python.experiments.optOutFrom": ["pythonTerminalEnvVarActivation"],
+
+  // ==========================================================================
   // Type Checking - Pylance (uses Pyright under the hood)
   // ==========================================================================
   "python.analysis.typeCheckingMode": "basic",
