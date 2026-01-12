@@ -30,7 +30,7 @@ concurrency:
 
 env:
   # Pixi settings (must be vX.Y.Z format or "latest")
-  PIXI_VERSION: "v0.39.5"
+  PIXI_VERSION: "latest"
 
 jobs:
   build:
