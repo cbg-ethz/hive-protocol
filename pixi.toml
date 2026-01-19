@@ -37,6 +37,9 @@ arviz = ">=0.15"
 # Data manipulation
 polars = ">=0.20"
 
+# Data validation
+pydantic = ">=2.0"
+
 # Visualization
 matplotlib = ">=3.7"
 seaborn = ">=0.12"
@@ -114,6 +117,9 @@ docs = { cmd = "quarto render notebooks/ && rm -rf docs/tutorials && mv notebook
 
 # Render presentation slides
 slides = "quarto render docs/slides.qmd"
+
+# Publish documentation to GitHub Pages
+docs-publish = "quarto publish gh-pages docs/ --no-prompt"
 
 # Run Snakemake workflow (dry run)
 workflow-dry = "snakemake -n --snakefile workflow/Snakefile"

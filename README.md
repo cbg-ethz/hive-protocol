@@ -1,163 +1,224 @@
-# Hive-Protocol
+```
+═══════════════════════════════════════════════════════════════════════════════
 
-**The definitive protocol for Python in computational biology**
+  ⬢ HIVE-PROTOCOL ⬢  RESEARCH SOFTWARE CONTAINMENT STANDARD
 
-A template repository demonstrating modern Python standards for computational biology research. Created for the CBG Retreat 2026 at ETH Zurich (January 21-23, 2026).
+═══════════════════════════════════════════════════════════════════════════════
+```
+
+<div align="center">
+
+```
+        ⬢ ⬢ ⬢ ⬢ ⬢ ⬢ ⬢
+        ⬢ ⬢ ⬢ ⬢ ⬢ ⬢ ⬢
+        ⬢ ⬢ ⬢ ⬢ ⬢ ⬢ ⬢
+```
+
+**THE DEFINITIVE PROTOCOL FOR PYTHON IN COMPUTATIONAL BIOLOGY**
+
+`PROTOCOL-001` | `v1.0.0`
+
+[![CI](https://github.com/cbg-ethz/hive-protocol/actions/workflows/ci.yml/badge.svg)](https://github.com/cbg-ethz/hive-protocol/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Pixi](https://img.shields.io/badge/pixi-managed-yellow.svg)](https://pixi.sh/)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
+</div>
 
 ---
 
-## Why This Template Exists
+```
+⚠ WARNING: Unstructured research code detected
+→ SOLUTION: Deploy HIVE-PROTOCOL
+```
 
-The Python ecosystem has matured dramatically, but most research code still uses outdated practices. This template showcases the 2025 state-of-the-art:
+---
 
-| Old Way | Modern Way | Benefit |
-|---------|-----------|---------|
-| pip + requirements.txt | **pixi** | 10-100x faster, handles conda + PyPI |
-| Black + flake8 + isort | **Ruff** | Single tool, 30-100x faster |
-| pandas for everything | **Polars** | 5-50x faster for large data |
-| Jupyter notebooks | **Quarto** | Clean git diffs, reproducible |
-| Manual testing | **pytest + Hypothesis** | Property-based testing |
-| No type hints | **Type hints + mypy** | Catch bugs before runtime |
+## PROTOCOL OBJECTIVE
 
-## Quick Start
+Transform research scripts into production-grade software.
+
+```
+PROTOCOL COMPONENTS:
+[✓] Dependency Management    [✓] Code Quality
+[✓] Testing Framework        [✓] CI/CD Pipeline
+[✓] Type Safety              [✓] Documentation
+[✓] Configuration            [✓] Reproducibility
+```
+
+---
+
+## DEPLOYMENT SEQUENCE
 
 ```bash
-# Clone the repository
+# 1. CLONE
 git clone https://github.com/cbg-ethz/hive-protocol.git
 cd hive-protocol
 
-# Install pixi (if not already installed)
+# 2. INSTALL PIXI (if not present)
 curl -fsSL https://pixi.sh/install.sh | bash
 
-# Set up environment (installs all dependencies)
+# 3. INITIALIZE ENVIRONMENT
 pixi install
 
-# Verify installation
+# 4. VERIFY DEPLOYMENT
 pixi run test
-
-# Start exploring
-pixi run docs  # Render tutorial notebooks
 ```
 
-## Technology Stack
-
-### Package Management: [Pixi](https://pixi.sh/)
-Handles conda and PyPI packages seamlessly. Essential for bioinformatics where tools like samtools remain conda-only.
-
-### Bayesian Inference: [PyMC 5+](https://www.pymc.io/) *(content example)*
-Used here as example scientific content. The Kalman filter demonstrates state-space modeling—replace with your own domain logic.
-
-### Data Processing: [Polars](https://pola.rs/)
-DataFrame library built in Rust. 5-50x faster than pandas with lazy evaluation.
-
-### Code Quality: [Ruff](https://docs.astral.sh/ruff/)
-Replaces Black, flake8, isort, pyupgrade, and more. Written in Rust, 30-100x faster.
-
-### Documentation: [Quarto](https://quarto.org/)
-Reproducible notebooks with clean git diffs. Outputs render on demand.
-
-### Workflow: [Snakemake](https://snakemake.readthedocs.io/)
-Reproducible pipeline orchestration with automatic parallelization.
-
-## Repository Structure
-
-```
-hive-protocol/
-├── src/hive_protocol/       # Source code
-│   ├── inference/           # Kalman filter + diagnostics
-│   └── data/                # Data simulation
-├── tests/                   # pytest + Hypothesis tests
-├── notebooks/               # Quarto tutorials
-│   ├── 01_introduction.qmd
-│   ├── 02_kalman_filter.qmd
-│   └── 03_diagnostics.qmd
-├── workflow/                # Snakemake pipeline
-│   ├── Snakefile
-│   └── config/params.yaml
-├── docs/                    # Workshop materials
-├── pyproject.toml           # Python packaging config
-├── pixi.toml                # Pixi environment config
-└── .pre-commit-config.yaml  # Code quality hooks
-```
-
-## Common Tasks
-
-```bash
-# Run tests
-pixi run test
-
-# Run tests with coverage
-pixi run test-cov
-
-# Check code style
-pixi run lint
-
-# Auto-fix style issues
-pixi run lint-fix
-
-# Format code
-pixi run format
-
-# Type check
-pixi run typecheck
-
-# Run all checks
-pixi run check
-
-# Install pre-commit hooks
-pixi run hooks
-
-# Render documentation
-pixi run docs
-
-# Run Snakemake workflow
-pixi run workflow
-```
-
-## Workshop Materials
-
-For the January 2026 workshop:
-
-- **[slides.qmd](docs/slides.qmd)** - Presentation slides (Quarto reveal.js)
-- **[TUTORIAL.md](docs/TUTORIAL.md)** - Step-by-step guide for participants
-
-Render slides with:
-```bash
-pixi run slides
-```
-
-## Fork and Customize
-
-This template is designed to be forked and customized:
-
-1. **Fork** this repository
-2. **Rename** `hive_protocol` to your project name
-3. **Update** `pyproject.toml` and `pixi.toml` with your details
-4. **Replace** the Kalman filter code with your domain logic
-5. **Keep** the testing, CI/CD, and documentation patterns
-
-## Contributing
-
-We welcome contributions! Please:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run `pixi run check` to ensure quality
-5. Commit with a descriptive message
-6. Push to your branch
-7. Open a Pull Request
-
-## License
-
-MIT License - see [LICENSE](LICENSE) for details.
-
-## Acknowledgments
-
-- CBG-ETH Zurich for supporting modern research practices
-- The PyMC, Polars, Ruff, and Quarto communities
-- All workshop participants who improve this template
+**STATUS:** Environment operational.
 
 ---
 
+## TECHNOLOGY MATRIX
+
+| Category | Old Protocol | Modern Protocol | Improvement |
+|----------|--------------|-----------------|-------------|
+| **Package Management** | pip + requirements.txt | **pixi** | 10-100x faster |
+| **Code Quality** | Black + flake8 + isort | **Ruff** | 30-100x faster |
+| **Data Processing** | pandas | **Polars** | 5-50x faster |
+| **Notebooks** | Jupyter | **Quarto** | Git-friendly |
+| **Testing** | unittest | **pytest + Hypothesis** | Property-based |
+| **Configuration** | argparse / dict | **Pydantic** | Auto-validation |
+| **Type Checking** | None | **mypy + Pyright** | Static analysis |
+
+---
+
+## DIRECTORY STRUCTURE
+
+```
+hive-protocol/
+├── src/hive_protocol/       # SOURCE CODE (src layout)
+│   ├── inference/           # Kalman filter + diagnostics
+│   └── data/                # Data simulation
+├── tests/                   # PYTEST + HYPOTHESIS
+├── notebooks/               # QUARTO TUTORIALS
+│   ├── 01_introduction.qmd
+│   ├── 02_kalman_filter.qmd
+│   └── 03_diagnostics.qmd
+├── workflow/                # SNAKEMAKE PIPELINE
+│   ├── Snakefile
+│   └── config/params.yaml
+├── docs/                    # WORKSHOP MATERIALS
+├── pyproject.toml           # SINGLE SOURCE OF TRUTH
+├── pixi.toml                # ENVIRONMENT SPEC
+└── .pre-commit-config.yaml  # QUALITY HOOKS
+```
+
+---
+
+## OPERATIONS MANUAL
+
+```bash
+# TESTING
+pixi run test              # Run test suite
+pixi run test-cov          # Run with coverage report
+
+# CODE QUALITY
+pixi run lint              # Check code style
+pixi run lint-fix          # Auto-fix issues
+pixi run format            # Format code
+
+# TYPE CHECKING
+pixi run typecheck         # Pyright (fast, local)
+pixi run typecheck-ci      # mypy (stable, CI)
+
+# DOCUMENTATION
+pixi run docs              # Render notebooks
+pixi run slides            # Render presentation
+
+# WORKFLOW
+pixi run workflow          # Execute Snakemake pipeline
+pixi run workflow-dry      # Dry run (preview)
+
+# MAINTENANCE
+pixi run check             # Run ALL quality checks
+pixi run hooks             # Install pre-commit hooks
+```
+
+---
+
+## PROTOCOL ADAPTATION
+
+### STEPS
+
+1. **FORK** this repository
+2. **RENAME** `hive_protocol` → `your_project`
+3. **UPDATE** `pyproject.toml` metadata
+4. **REPLACE** Kalman filter with your domain logic
+5. **RETAIN** testing + CI patterns
+
+### PRESERVE
+
+```
+[✓] src/ layout              [✓] pyproject.toml structure
+[✓] Test organization        [✓] CI/CD workflows
+[✓] Pre-commit config        [✓] Quarto notebooks pattern
+```
+
+---
+
+## WORKSHOP MATERIALS
+
+**CBG Retreat 2026** | ETH Zurich | January 21-23, 2026
+
+| Resource | Location |
+|----------|----------|
+| Slides | `docs/slides.qmd` |
+| Tutorial | `docs/TUTORIAL.md` |
+| Render | `pixi run slides` |
+
+---
+
+## EXTERNAL REFERENCES
+
+| Tool | Documentation |
+|------|---------------|
+| Pixi | [pixi.sh](https://pixi.sh) |
+| Ruff | [docs.astral.sh/ruff](https://docs.astral.sh/ruff) |
+| Pydantic | [docs.pydantic.dev](https://docs.pydantic.dev) |
+| Hypothesis | [hypothesis.readthedocs.io](https://hypothesis.readthedocs.io) |
+| Quarto | [quarto.org](https://quarto.org) |
+| PyMC | [pymc.io](https://www.pymc.io) |
+
+---
+
+## CONTRIBUTING
+
+```bash
+# 1. Fork repository
+# 2. Create feature branch
+git checkout -b feature/enhancement
+
+# 3. Make changes
+# 4. Verify compliance
+pixi run check
+
+# 5. Commit (pre-commit enforces standards)
+git commit -m "feat: add enhancement"
+
+# 6. Push and create PR
+git push -u origin feature/enhancement
+```
+
+---
+
+## LICENSE
+
+MIT License — see [LICENSE](LICENSE)
+
+---
+
+<div align="center">
+
+```
+═══════════════════════════════════════════════════════════════════════════════
+  HIVE-PROTOCOL | RESEARCH SOFTWARE CONTAINMENT STANDARD | STATUS: OPERATIONAL
+═══════════════════════════════════════════════════════════════════════════════
+```
+
 *Built with modern Python for computational biology*
+
+**CBG-ETH Zurich**
+
+</div>

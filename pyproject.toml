@@ -47,6 +47,7 @@ dependencies = [
     "pymc>=5.0",
     "arviz>=0.15",
     "polars>=0.20",
+    "pydantic>=2.0",
 ]
 
 [project.optional-dependencies]
