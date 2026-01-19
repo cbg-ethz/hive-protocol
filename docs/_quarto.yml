@@ -1,0 +1,31 @@
+# Quarto project configuration for GitHub Pages
+# See https://quarto.org/docs/publishing/github-pages.html
+
+project:
+  title: "Hive-Protocol"
+  type: website
+  output-dir: _site
+
+website:
+  title: "Hive-Protocol"
+  description: "The Definitive Protocol for Python in Computational Biology"
+  navbar:
+    left:
+      - text: "Slides"
+        href: slides.html
+      - text: "Tutorial"
+        href: TUTORIAL.html
+      - text: "Narration"
+        href: narration.html
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    highlight-style: github
+
+# Don't render - slides.qmd has its own format
+render:
+  - "*.md"

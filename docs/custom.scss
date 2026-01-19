@@ -1,13 +1,26 @@
 /*-- scss:defaults --*/
 
+// Brand colors
 $presentation-heading-color: #2E86AB;
 $link-color: #A23B72;
 $code-block-bg: #f8f9fa;
 
+// Additional accent colors
+$accent-orange: #F18F01;
+$accent-blue: #2E86AB;
+$accent-magenta: #A23B72;
+$text-muted: #6c757d;
+
 /*-- scss:rules --*/
 
+// Typography
 .reveal h1, .reveal h2 {
   font-weight: 600;
+}
+
+.reveal h3 {
+  color: $accent-magenta;
+  font-weight: 500;
 }
 
 .reveal code {
@@ -16,12 +29,197 @@ $code-block-bg: #f8f9fa;
 
 .reveal pre code {
   max-height: 500px;
+  border-radius: 8px;
 }
 
 .reveal table {
   font-size: 0.8em;
 }
 
+// Slide backgrounds
 .reveal .slide-background-content {
   background-size: cover;
+}
+
+// Logo grid for showcasing tools
+.logo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2.5rem;
+  padding: 2rem 0;
+}
+
+.logo-grid img {
+  height: 60px;
+  width: auto;
+  opacity: 0.85;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.logo-grid img:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+// Logo item with label
+.logo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  font-size: 0.9em;
+  font-weight: 500;
+  color: $text-muted;
+}
+
+.logo-item img {
+  height: 50px;
+  width: auto;
+}
+
+// Honeycomb/pyramid layout for toolkit
+.honeycomb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.hex-row {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.hex-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, rgba(46, 134, 171, 0.08) 0%, rgba(162, 59, 114, 0.08) 100%);
+  border-radius: 12px;
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.75em;
+  font-weight: 500;
+  color: $text-muted;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid rgba(46, 134, 171, 0.15);
+}
+
+.hex-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(46, 134, 171, 0.15);
+}
+
+.hex-item img {
+  height: 45px;
+  width: auto;
+  margin-bottom: 0.25rem;
+}
+
+// Inline logo row
+.logo-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.logo-row img {
+  height: 40px;
+  width: auto;
+}
+
+// Centered content
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+// Better blockquotes
+.reveal blockquote {
+  border-left: 4px solid $accent-magenta;
+  background: rgba(162, 59, 114, 0.05);
+  padding: 1rem 1.5rem;
+  font-style: italic;
+  border-radius: 0 8px 8px 0;
+}
+
+// Better table styling
+.reveal table {
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.reveal table th {
+  background: $accent-blue;
+  color: white;
+  padding: 0.75rem 1rem;
+}
+
+.reveal table td {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.reveal table tr:hover td {
+  background: rgba(46, 134, 171, 0.05);
+}
+
+// Mermaid diagram styling
+.mermaid {
+  background: transparent !important;
+}
+
+// Footer styling
+.reveal .footer {
+  font-size: 0.6em;
+  color: $text-muted;
+}
+
+// Subtle animations for fragment reveals
+.reveal .fragment {
+  transition: all 0.3s ease;
+}
+
+// r-fit-text for hook slides
+.reveal .r-fit-text {
+  font-weight: 600;
+}
+
+// Hive Protocol branding text (paperclip/clinical style)
+.hive-brand {
+  font-family: monospace;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.hive-brand-large {
+  font-size: 2em;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.hive-brand-small {
+  font-size: 1.2em;
+}
+
+// Hexagon decorations for title
+.hex-decoration {
+  color: $accent-magenta;
+  font-size: 0.8em;
+  letter-spacing: 0.3em;
+  opacity: 0.7;
 }

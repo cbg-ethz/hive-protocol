@@ -318,7 +318,6 @@ You've learned to:
 ## Next Steps
 
 - Read through the Quarto notebooks in detail
-- Explore the [LEARNING_PATH.md](LEARNING_PATH.md) for a 4-week progression
 - Fork and customize for your own projects
 - Share with your lab mates!
 

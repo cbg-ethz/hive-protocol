@@ -1,8 +1,8 @@
 ---
 title: "Modern Python for Computational Biology"
-subtitle: "The Hive Protocol"
+subtitle: "⬢ The Hive Protocol ⬢"
 author: "CBG Retreat 2026"
-date: "January 2026"
+date: "⬢ ⬢ ⬢  January 2026  ⬢ ⬢ ⬢"
 format:
   revealjs:
     theme: [default, custom.scss]
@@ -13,7 +13,7 @@ format:
     transition: fade
     width: 1600
     height: 900
-    footer: "CBG Retreat 2026 | ETH Zurich"
+    footer: "⬢ Hive Protocol ⬢ CBG Retreat 2026 | ETH Zurich"
 execute:
   echo: true
   eval: false
@@ -21,26 +21,41 @@ execute:
 
 # Foundations {background-color="#2E86AB"}
 
+## {background-color="#2E86AB"}
+
+::: {.center}
+[⬢ HIVE-PROTOCOL ⬢]{.hive-brand .hive-brand-large}
+:::
+
+::: {.r-fit-text}
+What if every project started with tests, docs, and CI already working?
+:::
+
+. . .
+
+**Fork this repo. Delete the TODO. Ship research software.**
+
 ## The Problem
 
 ::: {.columns}
-::: {.column width="50%"}
-### What we see in research code
-
-- `requirements.txt` with version conflicts
-- No tests ("I tested it manually")
-- No type hints
-- "Works on my machine"
-- Jupyter notebooks in git (merge nightmare)
+::: {.column width="55%"}
+![](images/xkcd-fixing-problems.png){height="400px"}
 :::
 
-::: {.column width="50%"}
-### The cost
+::: {.column width="45%"}
+### The recursive refactor trap
 
-- Hours debugging environment issues
-- Results that can't be reproduced
-- Code that only the author understands
-- Papers with broken supplementary code
+- "Just one quick fix..."
+- No tests → afraid to change code
+- No types → bugs hide until runtime
+- No CI → "works on my machine"
+- No structure → rewrite from scratch
+
+### The real cost
+
+- **Papers** with broken code
+- **Results** that can't be reproduced
+- **Time** lost to environment hell
 :::
 :::
 
@@ -55,18 +70,78 @@ The Python ecosystem has matured. **Use the modern tools.**
 | pandas for everything | **Polars** | 5-50x faster for large data |
 | Jupyter notebooks | **Quarto** | Clean git diffs, reproducible |
 | Manual testing | **pytest + Hypothesis** | Property-based testing |
+| Manual config validation | **Pydantic** | Automatic validation, serialization |
+
+## Our Toolkit
+
+::: {.honeycomb}
+::: {.hex-row .row-top}
+::: {.hex-item}
+![](images/logos/pixi.svg){height="45px"}
+Pixi
+:::
+::: {.hex-item}
+![](images/logos/ruff.svg){height="45px"}
+Ruff
+:::
+::: {.hex-item}
+![](images/logos/polars.svg){height="45px"}
+Polars
+:::
+::: {.hex-item}
+![](images/logos/quarto.svg){height="45px"}
+Quarto
+:::
+:::
+::: {.hex-row .row-middle}
+::: {.hex-item}
+![](images/logos/pytest.svg){height="45px"}
+Pytest
+:::
+::: {.hex-item}
+![](images/logos/hypothesis.svg){height="45px"}
+Hypothesis
+:::
+::: {.hex-item}
+![](images/logos/pydantic.svg){height="45px"}
+Pydantic
+:::
+:::
+::: {.hex-row .row-bottom}
+::: {.hex-item}
+![](images/logos/mypy.svg){height="45px"}
+mypy
+:::
+::: {.hex-item}
+![](images/logos/pyright.svg){height="45px"}
+Pyright
+:::
+:::
+:::
 
 ## Why Pixi?
 
 ::: {.columns}
-::: {.column width="60%"}
+::: {.column width="55%"}
 ### Bioinformatics needs conda
 
 - samtools, bedtools, bcftools
 - Many tools are conda-only
 - PyPI alone isn't enough
 
-### Pixi handles both
+### The alternatives
+
+| Tool | Conda | PyPI | Speed | Lock files |
+|------|:-----:|:----:|:-----:|:----------:|
+| **conda** | Yes | Limited | Slow | No |
+| **poetry** | No | Yes | Medium | Yes |
+| **uv** | No | Yes | Fast | Yes |
+| **pixi** | Yes | Yes | Fast | Yes |
+
+:::
+
+::: {.column width="45%"}
+### Why we chose Pixi
 
 ```bash
 # Install everything in seconds
@@ -76,19 +151,15 @@ pixi install
 pixi run test
 pixi run lint
 ```
-:::
 
-::: {.column width="40%"}
 ### Speed comparison
 
 ```
-Traditional setup:
-  conda create ... → 5 min
-  pip install ... → 2 min
-  conflicts ... → 30 min
-
-Pixi:
-  pixi install → 30 sec
+conda create ... → 5 min
+poetry install → 2 min
+uv pip install → 30 sec
+pixi install → 30 sec
+  (+ conda packages!)
 ```
 :::
 :::
@@ -311,6 +382,116 @@ warn_unused_ignores = true
 Runs on every commit. No type errors reach main.
 :::
 :::
+
+## Why Pydantic?
+
+::: {.columns}
+::: {.column width="50%"}
+### The problem
+
+```python
+# Manual validation is tedious and error-prone
+def run_experiment(config: dict) -> None:
+    if "n_samples" not in config:
+        raise ValueError("Missing n_samples")
+    if not isinstance(config["n_samples"], int):
+        raise TypeError("n_samples must be int")
+    if config["n_samples"] < 1:
+        raise ValueError("n_samples must be >= 1")
+    # ... and so on for every field
+```
+:::
+
+::: {.column width="50%"}
+### Pydantic solution
+
+```python
+from pydantic import BaseModel, Field
+
+class ExperimentConfig(BaseModel):
+    n_samples: int = Field(ge=1)
+    n_tune: int = Field(ge=1, default=500)
+    random_seed: int | None = None
+    output_dir: Path = Path("results")
+
+# Validation happens automatically
+config = ExperimentConfig(n_samples=1000)
+```
+
+**Automatic:** Type coercion, validation, serialization
+:::
+:::
+
+## Pydantic for Scientific Configs
+
+::: {.columns}
+::: {.column width="50%"}
+### Define once, validate everywhere
+
+```python
+from pydantic import BaseModel, Field
+from pathlib import Path
+
+class KalmanConfig(BaseModel):
+    """Configuration for Kalman filter."""
+
+    # Simulation parameters
+    n_steps: int = Field(ge=10, le=10000)
+    process_noise: float = Field(gt=0, le=10)
+    measurement_noise: float = Field(gt=0, le=10)
+
+    # Inference parameters
+    n_samples: int = Field(ge=100, default=1000)
+    n_tune: int = Field(ge=50, default=500)
+```
+:::
+
+::: {.column width="50%"}
+### Benefits
+
+- **Type coercion:** `"1000"` becomes `1000`
+- **Validation:** Catches invalid values immediately
+- **Serialization:** `config.model_dump_json()`
+- **Documentation:** Fields are self-documenting
+
+### Load from YAML/JSON
+
+```python
+import yaml
+
+with open("config.yaml") as f:
+    data = yaml.safe_load(f)
+
+config = KalmanConfig(**data)
+```
+:::
+:::
+
+## Pydantic + Type Checkers
+
+```python
+from pydantic import BaseModel, Field
+import numpy as np
+from numpy.typing import NDArray
+
+class SimulationResult(BaseModel):
+    """Results from a simulation run."""
+
+    model_config = {"arbitrary_types_allowed": True}
+
+    true_states: NDArray[np.float64]
+    observations: NDArray[np.float64]
+    config: KalmanConfig
+
+    @property
+    def n_steps(self) -> int:
+        return len(self.true_states)
+```
+
+**Key insight:** Type hints + Pydantic = defense in depth
+
+- **mypy/Pyright** catch type errors at development time
+- **Pydantic** catches validation errors at runtime
 
 ## Hypothesis: Property-Based Testing
 
@@ -575,6 +756,142 @@ git commit -m "docs: add docstring to function"
 git push -u origin demo/my-feature
 ```
 
+# Hands-On Demos {background-color="#F18F01"}
+
+## Demo: Ruff Auto-Fix
+
+::: {.columns}
+::: {.column width="50%"}
+### Before
+
+```python
+import numpy as np
+import os,sys
+from typing import List,Dict
+def bad_func(x,y,z):
+    result=x+y
+    unused_var = 10
+    return result
+```
+
+### Commands
+
+```bash
+pixi run ruff check --fix demo.py
+pixi run ruff format demo.py
+```
+:::
+
+::: {.column width="50%"}
+### After
+
+```python
+import numpy as np
+
+
+def bad_func(x, y, z):
+    result = x + y
+    return result
+```
+
+**Fixed automatically:**
+
+- Removed unused imports (`os`, `sys`)
+- Fixed spacing around operators
+- Removed unused variable
+- Sorted and cleaned imports
+:::
+:::
+
+## Demo: Quarto Live Edit
+
+::: {.columns}
+::: {.column width="50%"}
+### Start the preview server
+
+```bash
+quarto preview notebooks/01_introduction.qmd
+```
+
+### What you see
+
+- Live reload on save
+- Code + output rendered together
+- Clean markdown source (git-friendly!)
+:::
+
+::: {.column width="50%"}
+### The `.qmd` file
+
+````markdown
+---
+title: "My Analysis"
+---
+
+## Introduction
+
+Some text explaining the analysis.
+
+```{{python}}
+import numpy as np
+x = np.linspace(0, 10, 100)
+print(f"Created {len(x)} points")
+```
+
+Results appear inline!
+````
+:::
+:::
+
+## Demo: Pydantic Validation
+
+```python
+from pydantic import BaseModel, Field, ValidationError
+
+class ExperimentConfig(BaseModel):
+    n_samples: int = Field(ge=1, le=10000)
+    learning_rate: float = Field(gt=0, lt=1)
+
+# Valid config
+config = ExperimentConfig(n_samples=1000, learning_rate=0.01)
+print(config)  # n_samples=1000 learning_rate=0.01
+
+# Invalid config - clear error message!
+try:
+    bad = ExperimentConfig(n_samples=-5, learning_rate=2.0)
+except ValidationError as e:
+    print(e)
+    # n_samples: Input should be >= 1
+    # learning_rate: Input should be < 1
+```
+
+**Your experiments fail fast with clear messages.**
+
+## Demo: Hypothesis Bug Finding
+
+```python
+from hypothesis import given, strategies as st
+
+def remove_duplicates(items: list[int]) -> list[int]:
+    """Remove duplicates while preserving order."""
+    seen = set()
+    return [x for x in items if x not in seen and not seen.add(x)]
+
+@given(st.lists(st.integers()))
+def test_remove_duplicates(items):
+    result = remove_duplicates(items)
+    # Property: no duplicates
+    assert len(result) == len(set(result))
+    # Property: all elements preserved
+    assert set(result) == set(items)
+    # Property: order preserved
+    for i, x in enumerate(result):
+        original_idx = items.index(x)
+        assert all(items.index(y) > original_idx for y in result[i+1:] if y != x)
+```
+
+Run: `pixi run pytest -v` — Hypothesis generates hundreds of test cases automatically.
+
 # Summary {background-color="#2E86AB"}
 
 ## What We Covered
@@ -583,6 +900,7 @@ git push -u origin demo/my-feature
 |-------|--------------|
 | Foundations | Use pixi + Ruff for 10-100x speedup |
 | Type Safety | Pyright for local dev, mypy for CI |
+| Configuration | Pydantic validates your experiment parameters |
 | Testing | Hypothesis finds bugs you didn't think of |
 | Workflows | Automate quality with CI/CD |
 
@@ -592,6 +910,7 @@ git push -u origin demo/my-feature
 - **Tutorial:** `docs/TUTORIAL.md`
 - **Pixi:** [pixi.sh](https://pixi.sh)
 - **Ruff:** [docs.astral.sh/ruff](https://docs.astral.sh/ruff)
+- **Pydantic:** [docs.pydantic.dev](https://docs.pydantic.dev)
 - **Hypothesis:** [hypothesis.readthedocs.io](https://hypothesis.readthedocs.io)
 - **Pyright:** [github.com/microsoft/pyright](https://github.com/microsoft/pyright)
 
@@ -602,6 +921,10 @@ git push -u origin demo/my-feature
 3. **Ongoing:** Share with your lab
 
 . . .
+
+::: {.center}
+[⬢ HIVE-PROTOCOL ⬢]{.hive-brand .hive-brand-small}
+:::
 
 **Questions?**
 
