@@ -13,7 +13,7 @@
 
 # Use a consistent version of pre-commit hooks
 default_language_version:
-  python: python3.11
+  python: python3.10
 
 # Run hooks in parallel for speed
 ci:
