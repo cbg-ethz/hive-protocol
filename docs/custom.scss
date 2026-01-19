@@ -139,6 +139,14 @@ $text-muted: #6c757d;
   width: auto;
 }
 
+// Centered content
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+}
+
 // Better blockquotes
 .reveal blockquote {
   border-left: 4px solid $accent-magenta;
@@ -188,4 +196,30 @@ $text-muted: #6c757d;
 // r-fit-text for hook slides
 .reveal .r-fit-text {
   font-weight: 600;
+}
+
+// Hive Protocol branding text (paperclip/clinical style)
+.hive-brand {
+  font-family: monospace;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.hive-brand-large {
+  font-size: 2em;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.hive-brand-small {
+  font-size: 1.2em;
+}
+
+// Hexagon decorations for title
+.hex-decoration {
+  color: $accent-magenta;
+  font-size: 0.8em;
+  letter-spacing: 0.3em;
+  opacity: 0.7;
 }

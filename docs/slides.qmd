@@ -1,8 +1,8 @@
 ---
 title: "Modern Python for Computational Biology"
-subtitle: "The Hive Protocol"
+subtitle: "⬢ The Hive Protocol ⬢"
 author: "CBG Retreat 2026"
-date: "January 2026"
+date: "⬢ ⬢ ⬢  January 2026  ⬢ ⬢ ⬢"
 format:
   revealjs:
     theme: [default, custom.scss]
@@ -13,7 +13,7 @@ format:
     transition: fade
     width: 1600
     height: 900
-    footer: "CBG Retreat 2026 | ETH Zurich"
+    footer: "⬢ Hive Protocol ⬢ CBG Retreat 2026 | ETH Zurich"
 execute:
   echo: true
   eval: false
@@ -22,6 +22,10 @@ execute:
 # Foundations {background-color="#2E86AB"}
 
 ## {background-color="#2E86AB"}
+
+::: {.center}
+[⬢ HIVE-PROTOCOL ⬢]{.hive-brand .hive-brand-large}
+:::
 
 ::: {.r-fit-text}
 What if every project started with tests, docs, and CI already working?
@@ -34,23 +38,24 @@ What if every project started with tests, docs, and CI already working?
 ## The Problem
 
 ::: {.columns}
-::: {.column width="50%"}
-### What we see in research code
-
-- `requirements.txt` with version conflicts
-- No tests ("I tested it manually")
-- No type hints
-- "Works on my machine"
-- Jupyter notebooks in git (merge nightmare)
+::: {.column width="55%"}
+![](images/xkcd-fixing-problems.png){height="400px"}
 :::
 
-::: {.column width="50%"}
-### The cost
+::: {.column width="45%"}
+### The recursive refactor trap
 
-- Hours debugging environment issues
-- Results that can't be reproduced
-- Code that only the author understands
-- Papers with broken supplementary code
+- "Just one quick fix..."
+- No tests → afraid to change code
+- No types → bugs hide until runtime
+- No CI → "works on my machine"
+- No structure → rewrite from scratch
+
+### The real cost
+
+- **Papers** with broken code
+- **Results** that can't be reproduced
+- **Time** lost to environment hell
 :::
 :::
 
@@ -916,6 +921,10 @@ Run: `pixi run pytest -v` — Hypothesis generates hundreds of test cases automa
 3. **Ongoing:** Share with your lab
 
 . . .
+
+::: {.center}
+[⬢ HIVE-PROTOCOL ⬢]{.hive-brand .hive-brand-small}
+:::
 
 **Questions?**
 
