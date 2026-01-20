@@ -312,6 +312,22 @@ model, trace = fit_kalman_filter(obs)
 
 # Testing & Type Safety {background-color="#A23B72"}
 
+## {background-color="#1a1a2e" .center}
+
+::: {.meme-slide}
+
+```{.python .meme-code}
+🚗 = "Toyota Corolla 2021"
+🚗_number = float(🚗)
+🚗_number
+>>> 34783
+```
+
+::: {.fragment .meme-caption}
+*"Python lets you do this at 3am. Type checkers stop you at 9am."*
+:::
+:::
+
 ## Type Checking: mypy vs Pyright
 
 ::: {.columns}
@@ -424,19 +440,6 @@ warn_unused_ignores = true
 ```
 
 Runs on every commit. No type errors reach main.
-:::
-:::
-
-## {background-color="#1a1a2e" .center}
-
-::: {.meme-slide}
-
-```{.python .meme-code}
-🚗 car: ToyotaYaris2023 = float(3.14)
-```
-
-::: {.fragment .meme-caption}
-*"Python lets you do this at 3am. Type checkers stop you at 9am."*
 :::
 :::
 
