@@ -4,7 +4,10 @@ subtitle: "⬢ The Hive Protocol ⬢"
 author: "Gordon J. Koehn | CBG Retreat 2026"
 date: "22 January 2026"
 title-slide-attributes:
-  data-notes: "Red Queen - it takes all the running you can do to keep in the same place"
+  data-background-image: images/red-queen.png
+  data-background-size: 180px
+  data-background-position: 88% 85%
+  data-notes: "Red Queen - It takes all the running you can do, to keep in the same place"
 format:
   revealjs:
     theme: [default, custom.scss]
@@ -16,7 +19,7 @@ format:
     width: 1600
     height: 900
     footer: "⬢ Hive Protocol ⬢ CBG Retreat 2026 | ETH Zurich"
-    logo: images/red-queen.png
+    logo: images/hive-logo.svg
 execute:
   echo: true
   eval: false

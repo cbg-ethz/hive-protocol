@@ -297,19 +297,16 @@ $text-muted: #6c757d;
   font-style: italic;
 }
 
-// Red Queen quote on hook slide
-.red-queen-quote {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  color: white;
-  font-size: 0.75em;
+// Red Queen quote on title slide
+.reveal .slides section#title-slide::after {
+  content: '"It takes all the running you can do, to keep in the same place." — Lewis Carroll';
+  position: absolute;
+  bottom: 80px;
+  right: 100px;
+  font-size: 0.55em;
   font-style: italic;
-  opacity: 0.9;
-  margin: 0 auto;
-}
-
-.red-queen-quote img {
-  flex-shrink: 0;
+  color: $text-muted;
+  max-width: 280px;
+  text-align: right;
+  line-height: 1.4;
 }
