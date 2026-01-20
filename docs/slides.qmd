@@ -557,9 +557,11 @@ class SimulationResult(BaseModel):
 
 **Flip the playbook:** Don't write examples. Describe *properties* that must always hold.
 
+&nbsp;
+
 ::: {.columns}
 ::: {.column width="50%"}
-### ❌ Example-based: You pick the cases
+#### ❌ Example-based
 
 ```python
 def test_sort():
@@ -573,7 +575,7 @@ You test what you think of. Bugs hide in what you don't.
 :::
 
 ::: {.column width="50%"}
-### ✓ Property-based: Computer picks the cases
+#### ✓ Property-based
 
 ```python
 from hypothesis import given, strategies as st
@@ -979,6 +981,8 @@ def test_remove_duplicates(items):
         original_idx = items.index(x)
         assert all(items.index(y) > original_idx for y in result[i+1:] if y != x)
 ```
+
+&nbsp;
 
 ```bash
 pixi run pytest demos/demo_hypothesis.py -v --hypothesis-show-statistics
