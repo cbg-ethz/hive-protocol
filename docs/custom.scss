@@ -223,3 +223,46 @@ $text-muted: #6c757d;
   letter-spacing: 0.3em;
   opacity: 0.7;
 }
+
+// Landscape comparison - two column layout
+.reveal .columns table {
+  font-size: 0.75em;
+  margin: 0;
+}
+
+// Left column: old way (strikethrough header)
+.reveal .column:first-child th:last-child {
+  background: #dc3545;
+  text-decoration: line-through;
+}
+
+.reveal .column:first-child td:first-child {
+  font-weight: 600;
+  color: $accent-blue;
+}
+
+.reveal .column:first-child td:last-child {
+  color: $text-muted;
+  opacity: 0.8;
+}
+
+// Right column: modern way (green header, arrow column)
+.reveal .column:last-child th:first-child {
+  background: $text-muted;
+  width: 30px;
+}
+
+.reveal .column:last-child th:last-child {
+  background: #28a745;
+}
+
+.reveal .column:last-child td:first-child {
+  text-align: center;
+  color: #28a745;
+  font-weight: bold;
+}
+
+.reveal .column:last-child td:last-child {
+  font-weight: 600;
+  color: #28a745;
+}

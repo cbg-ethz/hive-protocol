@@ -28,18 +28,29 @@ This document contains spoken narration for each slide in the workshop presentat
 
 > The cost? Hours debugging environment issues, results that can't be reproduced, code that only the author understands, and papers with broken supplementary code. This isn't about being pedantic - it's about scientific integrity and your own sanity.
 
-### The 2025 Landscape
+### The 2026 Landscape
 **Duration:** 2 minutes
 
 > The good news: The Python ecosystem has matured dramatically. These aren't experimental tools anymore - they're production-ready and widely adopted.
 
-> [Go through table]
-> - Pixi replaces pip and conda with a single tool that's 10-100 times faster
-> - Ruff replaces Black, flake8, and isort with one tool that's 30-100 times faster
-> - Polars gives you 5-50x speedups over pandas for large datasets
-> - Quarto replaces Jupyter notebooks with files that actually work with git
-> - Hypothesis finds bugs you didn't know existed
-> - And Pydantic automatically validates your configuration parameters
+> Let's look at what we're replacing. [Point to Old Way column - shown with strikethrough]
+> - pip and requirements.txt for package management
+> - The Black-flake8-isort trio for code quality
+> - pandas for everything data-related
+> - Jupyter notebooks for literate programming
+> - Manual test cases that only test what we thought of
+> - And manual config validation that we often forget
+
+> [Click to reveal Modern Way column - each tool appears]
+> Now here's the 2026 stack:
+> - **Pixi** - 10-100x faster, handles both conda and PyPI
+> - **Ruff** - one tool, 30-100x faster
+> - **Polars** - 5-50x speedups for large data
+> - **Quarto** - clean git diffs, reproducible
+> - **pytest + Hypothesis** - finds bugs you didn't know existed
+> - **Pydantic** - automatic validation with clear errors
+
+> All of these are included in this template and ready to use.
 
 ### Our Toolkit
 **Duration:** 30 seconds

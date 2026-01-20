@@ -66,14 +66,31 @@ What if every project started with tests, docs, and CI already working?
 
 The Python ecosystem has matured. **Use the modern tools.**
 
-| Old Way | Modern Way | Benefit |
-|---------|------------|---------|
-| pip + requirements.txt | **pixi** | 10-100x faster, handles conda + PyPI |
-| Black + flake8 + isort | **Ruff** | Single tool, 30-100x faster |
-| pandas for everything | **Polars** | 5-50x faster for large data |
-| Jupyter notebooks | **Quarto** | Clean git diffs, reproducible |
-| Manual testing | **pytest + Hypothesis** | Property-based testing |
-| Manual config validation | **Pydantic** | Automatic validation, serialization |
+:::: {.columns}
+::: {.column width="50%"}
+| Function | ~~The Old Way~~ |
+|----------|-----------------|
+| Package Mgmt | pip + requirements.txt |
+| Code Quality | Black + flake8 + isort |
+| Data Processing | pandas for everything |
+| Literate Prog. | Jupyter notebooks |
+| Testing | Manual test cases |
+| Config Validation | Manual checks |
+:::
+
+::: {.column width="50%" .fragment}
+| | **The Modern Way** |
+|:---:|-------------------|
+| → | **pixi** |
+| → | **Ruff** |
+| → | **Polars** |
+| → | **Quarto** |
+| → | **pytest + Hypothesis** |
+| → | **Pydantic** |
+
+**All included in this template!**
+:::
+::::
 
 ## Our Toolkit
 
