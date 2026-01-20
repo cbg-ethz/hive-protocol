@@ -555,12 +555,13 @@ class SimulationResult(BaseModel):
 
 ## Hypothesis: Property-Based Testing
 
+**Flip the playbook:** Don't write examples. Describe *properties* that must always hold.
+
 ::: {.columns}
 ::: {.column width="50%"}
-### The problem with example-based tests
+### ❌ Example-based: You pick the cases
 
 ```python
-# You pick the examples
 def test_sort():
     assert sort([3, 1, 2]) == [1, 2, 3]
     assert sort([]) == []
@@ -572,7 +573,7 @@ You test what you think of. Bugs hide in what you don't.
 :::
 
 ::: {.column width="50%"}
-### Hypothesis generates test cases
+### ✓ Property-based: Computer picks the cases
 
 ```python
 from hypothesis import given, strategies as st
@@ -584,9 +585,9 @@ def test_sort_properties(xs):
     assert len(result) == len(xs)
     # Property: sorted order
     assert all(a <= b for a, b in zip(result, result[1:]))
-    # Property: same elements
-    assert sorted(xs) == result
 ```
+
+Hypothesis generates **hundreds of random inputs** and finds the **minimal failing case**.
 :::
 :::
 
@@ -979,7 +980,11 @@ def test_remove_duplicates(items):
         assert all(items.index(y) > original_idx for y in result[i+1:] if y != x)
 ```
 
-Run: `pixi run pytest -v` — Hypothesis generates hundreds of test cases automatically.
+```bash
+pixi run pytest demos/demo_hypothesis.py -v --hypothesis-show-statistics
+```
+
+Watch Hypothesis generate **600 test cases** (200 per property) in under a second.
 
 # Summary {background-color="#2E86AB"}
 
