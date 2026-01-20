@@ -21,8 +21,6 @@ execute:
 
 ## {background-color="#2E86AB"}
 
-:::: {.columns}
-::: {.column width="65%"}
 ::: {.r-fit-text}
 What if every project started with tests, docs, and CI already working?
 :::
@@ -33,17 +31,18 @@ What if every project started with tests, docs, and CI already working?
 
 . . .
 
+:::: {.columns}
+::: {.column width="60%"}
 ::: {.center}
 [⬢ HIVE-PROTOCOL ⬢]{.hive-brand .hive-brand-large}
 :::
 :::
 
-::: {.column width="35%"}
-![](images/red-queen.png){.center height="350px"}
-
-> *"Now, here, you see, it takes all the running you can do, to keep in the same place..."*
->
-> — Red Queen, *Through the Looking-Glass* (Lewis Carroll)
+::: {.column width="40%"}
+::: {.red-queen-quote}
+![](images/red-queen.png){height="180px"}
+*"It takes all the running you can do, to keep in the same place..."*
+:::
 :::
 ::::
 

@@ -296,3 +296,18 @@ $text-muted: #6c757d;
   color: #8b949e;
   font-style: italic;
 }
+
+// Red Queen quote on hook slide
+.red-queen-quote {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+  font-size: 0.7em;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.red-queen-quote img {
+  flex-shrink: 0;
+}
