@@ -2,7 +2,7 @@
 title: "Modern Python for Computational Biology"
 subtitle: "⬢ The Hive Protocol ⬢"
 author: "CBG Retreat 2026"
-date: "⬢ ⬢ ⬢  January 2026  ⬢ ⬢ ⬢"
+date: "⬢ ⬢ ⬢  22 January 2026  ⬢ ⬢ ⬢"
 format:
   revealjs:
     theme: [default, custom.scss]
