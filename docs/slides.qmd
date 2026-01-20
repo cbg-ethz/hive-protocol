@@ -167,6 +167,19 @@ pixi install → 30 sec
 :::
 :::
 
+## Pixi: Community Support
+
+::: {.columns}
+::: {.column width="50%"}
+![](images/conda-forge-pixi.png){height="280px"}
+:::
+::: {.column width="50%"}
+![](images/anaconda-pixi.png){height="280px"}
+:::
+:::
+
+Endorsed by **conda-forge** and **Anaconda** — the future of conda environments.
+
 ## Why Ruff?
 
 ::: {.columns}
