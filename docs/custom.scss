@@ -225,6 +225,10 @@ $text-muted: #6c757d;
 }
 
 // Landscape comparison - two column layout
+.reveal .columns {
+  gap: 3rem;
+}
+
 .reveal .columns table {
   font-size: 0.75em;
   margin: 0;
