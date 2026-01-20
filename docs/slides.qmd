@@ -5,7 +5,7 @@ author: "Gordon J. Koehn | CBG Retreat 2026"
 date: "22 January 2026"
 title-slide-attributes:
   data-background-image: images/red-queen.png
-  data-background-size: 180px
+  data-background-size: 240px
   data-background-position: 88% 85%
   data-notes: "Red Queen - It takes all the running you can do, to keep in the same place"
 format:
