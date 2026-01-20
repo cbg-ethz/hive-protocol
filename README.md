@@ -6,14 +6,6 @@
 ═══════════════════════════════════════════════════════════════════════════════
 ```
 
-<div align="center">
-
-```
-        ⬢ ⬢ ⬢ ⬢ ⬢ ⬢ ⬢
-        ⬢ ⬢ ⬢ ⬢ ⬢ ⬢ ⬢
-        ⬢ ⬢ ⬢ ⬢ ⬢ ⬢ ⬢
-```
-
 **THE DEFINITIVE PROTOCOL FOR PYTHON IN COMPUTATIONAL BIOLOGY**
 
 `PROTOCOL-001` | `v1.0.0`
