@@ -57,6 +57,13 @@ This document contains spoken narration for each slide in the workshop presentat
 
 > The workflow is simple: `pixi install` sets everything up in about 30 seconds. Then `pixi run test`, `pixi run lint` - everything is a simple command.
 
+### Pixi: Community Support
+**Duration:** 1 minute
+
+> And Pixi isn't just some niche tool - it's endorsed by both conda-forge and Anaconda. Look at this star history - it's growing rapidly because the community has recognized it solves a real problem.
+
+> Important note: Pixi is completely free for research and all other uses. It's BSD3 licensed with no restrictions on academic or commercial use. The entire toolchain is open source.
+
 ### Why Ruff?
 **Duration:** 2 minutes
 
@@ -170,6 +177,23 @@ This document contains spoken narration for each slide in the workshop presentat
 > Every push triggers automated testing on GitHub Actions. Tests run, linting runs, type checking runs. If anything fails, you see it immediately.
 
 > That green badge on your README? Instant trust.
+
+### CI: Resource-Efficient Testing
+**Duration:** 30 seconds
+
+> Look at this dependency graph. Jobs run in parallel where possible - lint and typecheck don't need to wait for each other. Tests run on multiple platforms simultaneously. Fast feedback, minimal compute waste.
+
+### CI: This is Trust
+**Duration:** 30 seconds
+
+> When you see all those green checks passing, you know your code works. Add features without fear. Refactor without anxiety. The CI has your back - it catches problems before they reach main.
+
+### Quality Isn't Optional. It's Automated.
+**Duration:** 1 minute
+
+> Here's what runs automatically on every push. On the left: pytest-cov showing 97% test coverage. On the right: interrogate showing 94% docstring coverage.
+
+> The key message: low friction, high standards. You write good code, the tools verify it automatically. Quality isn't something you do manually - it's enforced by the system.
 
 ### The Development Loop
 **Duration:** 1 minute

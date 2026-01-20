@@ -119,6 +119,10 @@ mypy
 ![](images/logos/pyright.svg){height="45px"}
 Pyright
 :::
+::: {.hex-item}
+![](images/logos/interrogate.svg){height="45px"}
+Interrogate
+:::
 :::
 :::
 
@@ -974,21 +978,22 @@ Run: `pixi run pytest -v` — Hypothesis generates hundreds of test cases automa
 
 | Topic | Key Takeaway |
 |-------|--------------|
-| Foundations | Use pixi + Ruff for 10-100x speedup |
+| Foundations | Pixi + Ruff for 10-100x speedup |
 | Type Safety | Pyright for local dev, mypy for CI |
 | Configuration | Pydantic validates your experiment parameters |
 | Testing | Hypothesis finds bugs you didn't think of |
-| Workflows | Automate quality with CI/CD |
+| Coverage | pytest-cov + interrogate automate quality |
+| Workflows | CI/CD catches issues before they reach main |
 
 ## Resources
 
 - **Repository:** [github.com/cbg-ethz/hive-protocol](https://github.com/cbg-ethz/hive-protocol)
-- **Tutorial:** `docs/TUTORIAL.md`
 - **Pixi:** [pixi.sh](https://pixi.sh)
 - **Ruff:** [docs.astral.sh/ruff](https://docs.astral.sh/ruff)
 - **Pydantic:** [docs.pydantic.dev](https://docs.pydantic.dev)
 - **Hypothesis:** [hypothesis.readthedocs.io](https://hypothesis.readthedocs.io)
-- **Pyright:** [github.com/microsoft/pyright](https://github.com/microsoft/pyright)
+- **pytest-cov:** [pytest-cov.readthedocs.io](https://pytest-cov.readthedocs.io)
+- **Interrogate:** [interrogate.readthedocs.io](https://interrogate.readthedocs.io)
 
 ## Next Steps
 
