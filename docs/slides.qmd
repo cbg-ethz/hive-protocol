@@ -356,7 +356,7 @@ Catch bugs **before** runtime. Document intent.
 | Tool | Use Case |
 |------|----------|
 | **Pyright** | Local dev (fast, strict) |
-| **mypy** | CI/pre-commit (stable) |
+| **mypy** | CI only (stable, canonical) |
 
 ```bash
 # Fast feedback while coding
@@ -426,20 +426,20 @@ warn_unused_ignores = true
 :::
 
 ::: {.column width="50%"}
-### Pre-commit integration
+### CI integration
 
 ```yaml
-# .pre-commit-config.yaml
-- repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v1.8.0
-  hooks:
-    - id: mypy
-      additional_dependencies:
-        - numpy
-        - polars
+# .github/workflows/ci.yml
+- name: Run mypy
+  run: pixi run typecheck-ci
 ```
 
-Runs on every commit. No type errors reach main.
+```bash
+# pixi.toml task
+typecheck-ci = "mypy src/"
+```
+
+Runs on every PR. No type errors reach main.
 :::
 :::
 
@@ -714,18 +714,16 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    hooks:
-      - id: mypy
 ```
 
 **What happens:**
 
 1. You run `git commit`
-2. Pre-commit runs Ruff and mypy
+2. Pre-commit runs Ruff (lint + format)
 3. If issues found → commit blocked, auto-fixed
 4. You commit again → clean code only
+
+*Type checking (mypy) runs in CI to keep commits fast.*
 
 ## GitHub Actions CI
 

@@ -74,22 +74,6 @@ repos:
         types_or: [python, pyi]
 
   # ==========================================================================
-  # Type checking - Mypy
-  # ==========================================================================
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.13.0
-    hooks:
-      - id: mypy
-        # Only check our source code
-        files: ^src/
-        # Additional type stubs
-        additional_dependencies:
-          - numpy
-          - types-PyYAML
-        # Use pyproject.toml configuration
-        args: [--config-file, pyproject.toml]
-
-  # ==========================================================================
   # Notebook hygiene - Strip outputs before commit
   # ==========================================================================
   - repo: https://github.com/kynan/nbstripout
