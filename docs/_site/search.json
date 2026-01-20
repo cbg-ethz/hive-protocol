@@ -1,0 +1,261 @@
+[
+  {
+    "objectID": "slides.html#section",
+    "href": "slides.html#section",
+    "title": "Modern Python for Computational Biology",
+    "section": "",
+    "text": "What if every project started with tests, docs, and CI already working?\n\n\nFork this repo. Delete the TODO. Ship research software.\n\n\n\n⬢ HIVE-PROTOCOL ⬢"
+  },
+  {
+    "objectID": "slides.html#the-problem",
+    "href": "slides.html#the-problem",
+    "title": "Modern Python for Computational Biology",
+    "section": "The Problem",
+    "text": "The Problem\n\n\n\n\nThe recursive refactor trap\n\n“Just one quick fix…”\nNo tests → afraid to change code\nNo types → bugs hide until runtime\nNo CI → “works on my machine”\nNo structure → rewrite from scratch\n\nThe real cost\n\nPapers with broken code\nResults that can’t be reproduced\nTime lost to environment hell"
+  },
+  {
+    "objectID": "slides.html#the-2025-landscape",
+    "href": "slides.html#the-2025-landscape",
+    "title": "Modern Python for Computational Biology",
+    "section": "The 2025 Landscape",
+    "text": "The 2025 Landscape\nThe Python ecosystem has matured. Use the modern tools.\n\n\n\n\n\n\n\n\nOld Way\nModern Way\nBenefit\n\n\n\n\npip + requirements.txt\npixi\n10-100x faster, handles conda + PyPI\n\n\nBlack + flake8 + isort\nRuff\nSingle tool, 30-100x faster\n\n\npandas for everything\nPolars\n5-50x faster for large data\n\n\nJupyter notebooks\nQuarto\nClean git diffs, reproducible\n\n\nManual testing\npytest + Hypothesis\nProperty-based testing\n\n\nManual config validation\nPydantic\nAutomatic validation, serialization"
+  },
+  {
+    "objectID": "slides.html#our-toolkit",
+    "href": "slides.html#our-toolkit",
+    "title": "Modern Python for Computational Biology",
+    "section": "Our Toolkit",
+    "text": "Our Toolkit\n\n\n\n Pixi\n\n\n Ruff\n\n\n Polars\n\n\n Quarto\n\n\n\n\n Pytest\n\n\n Hypothesis\n\n\n Pydantic\n\n\n\n\n mypy\n\n\n Pyright\n\n\n Interrogate"
+  },
+  {
+    "objectID": "slides.html#why-pixi",
+    "href": "slides.html#why-pixi",
+    "title": "Modern Python for Computational Biology",
+    "section": "Why Pixi?",
+    "text": "Why Pixi?\n\n\nBioinformatics needs conda\n\nsamtools, bedtools, bcftools\nMany tools are conda-only\nPyPI alone isn’t enough\n\nThe alternatives\n\n\n\nTool\nConda\nPyPI\nSpeed\nLock files\n\n\n\n\nconda\nYes\nLimited\nSlow\nNo\n\n\npoetry\nNo\nYes\nMedium\nYes\n\n\nuv\nNo\nYes\nFast\nYes\n\n\npixi\nYes\nYes\nFast\nYes\n\n\n\n\nWhy we chose Pixi\n# Install everything in seconds\npixi install\n\n# Run commands in the environment\npixi run test\npixi run lint\nSpeed comparison\nconda create ... → 5 min\npoetry install → 2 min\nuv pip install → 30 sec\npixi install → 30 sec\n  (+ conda packages!)"
+  },
+  {
+    "objectID": "slides.html#why-ruff",
+    "href": "slides.html#why-ruff",
+    "title": "Modern Python for Computational Biology",
+    "section": "Why Ruff?",
+    "text": "Why Ruff?\n\n\nOne tool replaces many\n\nBlack (formatting)\nflake8 (linting)\nisort (import sorting)\npyupgrade (syntax updates)\nAnd 700+ lint rules\n\nWritten in Rust\n30-100x faster than Python equivalents\n\nDemo\n# Check for issues\npixi run ruff check src/\n\n# Auto-fix everything\npixi run ruff check --fix src/\npixi run ruff format src/\nOne command. Done."
+  },
+  {
+    "objectID": "slides.html#repository-structure",
+    "href": "slides.html#repository-structure",
+    "title": "Modern Python for Computational Biology",
+    "section": "Repository Structure",
+    "text": "Repository Structure\nhive-protocol/\n├── src/hive_protocol/       # Source code (src layout)\n│   ├── inference/           # Kalman filter + diagnostics\n│   └── data/                # Data simulation\n├── tests/                   # pytest + Hypothesis tests\n├── notebooks/               # Quarto tutorials\n├── workflow/                # Snakemake pipeline\n├── docs/                    # Workshop materials\n├── pyproject.toml           # Single source of truth\n└── pixi.toml                # Environment specification\nKey principle: pyproject.toml is the single source of truth for your project."
+  },
+  {
+    "objectID": "slides.html#hands-on-setup",
+    "href": "slides.html#hands-on-setup",
+    "title": "Modern Python for Computational Biology",
+    "section": "Hands-on: Setup",
+    "text": "Hands-on: Setup\n# Clone the repository\ngit clone https://github.com/cbg-ethz/hive-protocol.git\ncd hive-protocol\n\n# Install pixi (if needed)\ncurl -fsSL https://pixi.sh/install.sh | bash\n\n# Set up environment\npixi install\n\n# Verify it works\npixi run test\nGoal: Everyone has a working environment."
+  },
+  {
+    "objectID": "slides.html#the-example-state-space-model",
+    "href": "slides.html#the-example-state-space-model",
+    "title": "Modern Python for Computational Biology",
+    "section": "The Example: State-Space Model",
+    "text": "The Example: State-Space Model\n\n\nThe problem\nEstimate hidden states from noisy observations using PyMC.\nfrom hive_protocol.data import simulate_noisy_trajectory\nfrom hive_protocol.inference import fit_kalman_filter\n\n# Simulate and fit\nstates, obs = simulate_noisy_trajectory(n_steps=50)\nmodel, trace = fit_kalman_filter(obs)\nThis is example content—replace with your domain logic.\n\nAlways check diagnostics\n\nR-hat &lt; 1.01: Chains converged\nESS &gt; 400: Enough samples\nDivergences = 0: No issues\n\n\n“If you don’t check diagnostics, you don’t have results.”"
+  },
+  {
+    "objectID": "slides.html#type-checking-mypy-vs-pyright",
+    "href": "slides.html#type-checking-mypy-vs-pyright",
+    "title": "Modern Python for Computational Biology",
+    "section": "Type Checking: mypy vs Pyright",
+    "text": "Type Checking: mypy vs Pyright\n\n\nWhy type hints?\n# Without types - what does this return?\ndef process(data, threshold):\n    return [x for x in data if x &gt; threshold]\n\n# With types - crystal clear\ndef process(\n    data: list[float],\n    threshold: float,\n) -&gt; list[float]:\n    return [x for x in data if x &gt; threshold]\nCatch bugs before runtime. Document intent.\n\nTwo tools, two purposes\n\n\n\nTool\nUse Case\n\n\n\n\nPyright\nLocal dev (fast, strict)\n\n\nmypy\nCI/pre-commit (stable)\n\n\n\n# Fast feedback while coding\npixi run typecheck      # pyright\n\n# Stable checks in CI\npixi run typecheck-ci   # mypy"
+  },
+  {
+    "objectID": "slides.html#pyright-fast-local-feedback",
+    "href": "slides.html#pyright-fast-local-feedback",
+    "title": "Modern Python for Computational Biology",
+    "section": "Pyright: Fast Local Feedback",
+    "text": "Pyright: Fast Local Feedback\n\n\nSpeed matters\n\nWritten in TypeScript\nChecks large codebases in seconds\nExcellent VS Code integration (Pylance)\n\nStrict mode available\npixi run typecheck-strict\nCatches more issues but requires more annotations.\n\nVS Code integration\n// .vscode/settings.json\n{\n  \"python.analysis.typeCheckingMode\": \"basic\",\n  \"python.analysis.diagnosticMode\": \"workspace\"\n}\nReal-time feedback as you type.\nHover over variables to see inferred types."
+  },
+  {
+    "objectID": "slides.html#mypy-stable-ci-checks",
+    "href": "slides.html#mypy-stable-ci-checks",
+    "title": "Modern Python for Computational Biology",
+    "section": "mypy: Stable CI Checks",
+    "text": "mypy: Stable CI Checks\n\n\nWhy mypy for CI?\n\nBattle-tested, stable\nExtensive plugin ecosystem\nWell-documented error messages\nIndustry standard\n\nConfiguration in pyproject.toml\n[tool.mypy]\npython_version = \"3.11\"\nwarn_return_any = true\nwarn_unused_ignores = true\n\nPre-commit integration\n# .pre-commit-config.yaml\n- repo: https://github.com/pre-commit/mirrors-mypy\n  rev: v1.8.0\n  hooks:\n    - id: mypy\n      additional_dependencies:\n        - numpy\n        - polars\nRuns on every commit. No type errors reach main."
+  },
+  {
+    "objectID": "slides.html#why-pydantic",
+    "href": "slides.html#why-pydantic",
+    "title": "Modern Python for Computational Biology",
+    "section": "Why Pydantic?",
+    "text": "Why Pydantic?\n\n\nThe problem\n# Manual validation is tedious and error-prone\ndef run_experiment(config: dict) -&gt; None:\n    if \"n_samples\" not in config:\n        raise ValueError(\"Missing n_samples\")\n    if not isinstance(config[\"n_samples\"], int):\n        raise TypeError(\"n_samples must be int\")\n    if config[\"n_samples\"] &lt; 1:\n        raise ValueError(\"n_samples must be &gt;= 1\")\n    # ... and so on for every field\n\nPydantic solution\nfrom pydantic import BaseModel, Field\n\nclass ExperimentConfig(BaseModel):\n    n_samples: int = Field(ge=1)\n    n_tune: int = Field(ge=1, default=500)\n    random_seed: int | None = None\n    output_dir: Path = Path(\"results\")\n\n# Validation happens automatically\nconfig = ExperimentConfig(n_samples=1000)\nAutomatic: Type coercion, validation, serialization"
+  },
+  {
+    "objectID": "slides.html#pydantic-for-scientific-configs",
+    "href": "slides.html#pydantic-for-scientific-configs",
+    "title": "Modern Python for Computational Biology",
+    "section": "Pydantic for Scientific Configs",
+    "text": "Pydantic for Scientific Configs\n\n\nDefine once, validate everywhere\nfrom pydantic import BaseModel, Field\nfrom pathlib import Path\n\nclass KalmanConfig(BaseModel):\n    \"\"\"Configuration for Kalman filter.\"\"\"\n\n    # Simulation parameters\n    n_steps: int = Field(ge=10, le=10000)\n    process_noise: float = Field(gt=0, le=10)\n    measurement_noise: float = Field(gt=0, le=10)\n\n    # Inference parameters\n    n_samples: int = Field(ge=100, default=1000)\n    n_tune: int = Field(ge=50, default=500)\n\nBenefits\n\nType coercion: \"1000\" becomes 1000\nValidation: Catches invalid values immediately\nSerialization: config.model_dump_json()\nDocumentation: Fields are self-documenting\n\nLoad from YAML/JSON\nimport yaml\n\nwith open(\"config.yaml\") as f:\n    data = yaml.safe_load(f)\n\nconfig = KalmanConfig(**data)"
+  },
+  {
+    "objectID": "slides.html#pydantic-type-checkers",
+    "href": "slides.html#pydantic-type-checkers",
+    "title": "Modern Python for Computational Biology",
+    "section": "Pydantic + Type Checkers",
+    "text": "Pydantic + Type Checkers\nfrom pydantic import BaseModel, Field\nimport numpy as np\nfrom numpy.typing import NDArray\n\nclass SimulationResult(BaseModel):\n    \"\"\"Results from a simulation run.\"\"\"\n\n    model_config = {\"arbitrary_types_allowed\": True}\n\n    true_states: NDArray[np.float64]\n    observations: NDArray[np.float64]\n    config: KalmanConfig\n\n    @property\n    def n_steps(self) -&gt; int:\n        return len(self.true_states)\nKey insight: Type hints + Pydantic = defense in depth\n\nmypy/Pyright catch type errors at development time\nPydantic catches validation errors at runtime"
+  },
+  {
+    "objectID": "slides.html#hypothesis-property-based-testing",
+    "href": "slides.html#hypothesis-property-based-testing",
+    "title": "Modern Python for Computational Biology",
+    "section": "Hypothesis: Property-Based Testing",
+    "text": "Hypothesis: Property-Based Testing\n\n\nThe problem with example-based tests\n# You pick the examples\ndef test_sort():\n    assert sort([3, 1, 2]) == [1, 2, 3]\n    assert sort([]) == []\n    assert sort([1]) == [1]\n    # Did you think of all edge cases?\nYou test what you think of. Bugs hide in what you don’t.\n\nHypothesis generates test cases\nfrom hypothesis import given, strategies as st\n\n@given(st.lists(st.integers()))\ndef test_sort_properties(xs):\n    result = sort(xs)\n    # Property: length preserved\n    assert len(result) == len(xs)\n    # Property: sorted order\n    assert all(a &lt;= b for a, b in zip(result, result[1:]))\n    # Property: same elements\n    assert sorted(xs) == result"
+  },
+  {
+    "objectID": "slides.html#hypothesis-strategies",
+    "href": "slides.html#hypothesis-strategies",
+    "title": "Modern Python for Computational Biology",
+    "section": "Hypothesis Strategies",
+    "text": "Hypothesis Strategies\n\n\nBuilt-in strategies\nfrom hypothesis import strategies as st\n\n# Primitives\nst.integers(min_value=0, max_value=100)\nst.floats(allow_nan=False)\nst.text(min_size=1)\nst.booleans()\n\n# Collections\nst.lists(st.integers(), min_size=1)\nst.dictionaries(st.text(), st.integers())\n\n# Combine them\nst.tuples(st.integers(), st.text())\n\nNumPy arrays\nfrom hypothesis.extra.numpy import arrays\nimport numpy as np\n\n@given(arrays(\n    dtype=np.float64,\n    shape=st.tuples(\n        st.integers(1, 100),\n        st.integers(1, 10),\n    ),\n    elements=st.floats(-1e6, 1e6, allow_nan=False),\n))\ndef test_matrix_properties(arr):\n    # Test with random matrices\n    assert arr.shape[0] &gt;= 1"
+  },
+  {
+    "objectID": "slides.html#hypothesis-in-practice",
+    "href": "slides.html#hypothesis-in-practice",
+    "title": "Modern Python for Computational Biology",
+    "section": "Hypothesis in Practice",
+    "text": "Hypothesis in Practice\nfrom hypothesis import given, strategies as st, settings\nimport numpy as np\n\n@given(\n    n_steps=st.integers(min_value=10, max_value=100),\n    process_noise=st.floats(min_value=0.01, max_value=1.0),\n)\n@settings(max_examples=50)  # Limit for slow tests\ndef test_kalman_filter_properties(n_steps, process_noise):\n    \"\"\"Test that Kalman filter has expected properties.\"\"\"\n    states, obs = simulate_noisy_trajectory(\n        n_steps=n_steps,\n        process_noise=process_noise,\n        seed=42,\n    )\n\n    # Property: observations should be noisier than states\n    assert np.std(obs) &gt;= np.std(states) * 0.5\n\n    # Property: lengths match\n    assert len(states) == len(obs) == n_steps\nKey insight: Test properties that must always hold, not specific values."
+  },
+  {
+    "objectID": "slides.html#git-for-researchers",
+    "href": "slides.html#git-for-researchers",
+    "title": "Modern Python for Computational Biology",
+    "section": "Git for Researchers",
+    "text": "Git for Researchers\n\n\nFeature branches\n# Never commit directly to main\ngit checkout -b feature/add-filter\n\n# Make changes, then\ngit add .\ngit commit -m \"Add bandpass filter\"\n\n# Merge via pull request\ngit push -u origin feature/add-filter\n\nGood commit messages\nBad:\nfix\nupdate\nchanges\nGood:\nfix: correct off-by-one in filter\nfeat: add bandpass filter option\ndocs: update installation guide"
+  },
+  {
+    "objectID": "slides.html#pre-commit-hooks",
+    "href": "slides.html#pre-commit-hooks",
+    "title": "Modern Python for Computational Biology",
+    "section": "Pre-commit Hooks",
+    "text": "Pre-commit Hooks\n# .pre-commit-config.yaml\nrepos:\n  - repo: https://github.com/astral-sh/ruff-pre-commit\n    hooks:\n      - id: ruff\n        args: [--fix]\n      - id: ruff-format\n\n  - repo: https://github.com/pre-commit/mirrors-mypy\n    hooks:\n      - id: mypy\nWhat happens:\n\nYou run git commit\nPre-commit runs Ruff and mypy\nIf issues found → commit blocked, auto-fixed\nYou commit again → clean code only"
+  },
+  {
+    "objectID": "slides.html#github-actions-ci",
+    "href": "slides.html#github-actions-ci",
+    "title": "Modern Python for Computational Biology",
+    "section": "GitHub Actions CI",
+    "text": "GitHub Actions CI\n# .github/workflows/ci.yml\non: [push, pull_request]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: prefix-dev/setup-pixi@v0.8.1\n      - run: pixi run test\n      - run: pixi run lint\n      - run: pixi run typecheck\nEvery push triggers automated testing.\nBadge on README = instant trust."
+  },
+  {
+    "objectID": "slides.html#the-development-loop",
+    "href": "slides.html#the-development-loop",
+    "title": "Modern Python for Computational Biology",
+    "section": "The Development Loop",
+    "text": "The Development Loop\n\nflowchart LR\n    A[Branch] --&gt; B[Code]\n    B --&gt; C[Test]\n    C --&gt; D[Commit]\n    D --&gt; E[Push]\n    E --&gt; F[PR]\n    F --&gt; G[Review]\n    G --&gt; H[Merge]\n    H --&gt; A\n\n\n\n\n\n\n\n\n\n\n\nCreate feature branch\nWrite code + tests\nRun pixi run check\nCommit (pre-commit runs)\nPush and create PR\nCI runs, review, merge"
+  },
+  {
+    "objectID": "slides.html#fork-and-customize",
+    "href": "slides.html#fork-and-customize",
+    "title": "Modern Python for Computational Biology",
+    "section": "Fork and Customize",
+    "text": "Fork and Customize\n\n\nSteps\n\nFork this repository\nRename hive_protocol → your project\nUpdate pyproject.toml metadata\nReplace the Kalman filter with your code\nKeep testing + CI patterns\n\n\nWhat to keep\n\nsrc/ layout\npyproject.toml structure\nTest organization\nCI/CD workflows\nPre-commit configuration\nQuarto notebooks pattern"
+  },
+  {
+    "objectID": "slides.html#hands-on-make-a-change",
+    "href": "slides.html#hands-on-make-a-change",
+    "title": "Modern Python for Computational Biology",
+    "section": "Hands-on: Make a Change",
+    "text": "Hands-on: Make a Change\n# Create branch\ngit checkout -b demo/my-feature\n\n# Edit something (e.g., add a docstring)\n# ...\n\n# Run checks\npixi run check\n\n# Commit\ngit add .\ngit commit -m \"docs: add docstring to function\"\n\n# Watch pre-commit run!\n\n# Push\ngit push -u origin demo/my-feature"
+  },
+  {
+    "objectID": "slides.html#demo-ruff-auto-fix",
+    "href": "slides.html#demo-ruff-auto-fix",
+    "title": "Modern Python for Computational Biology",
+    "section": "Demo: Ruff Auto-Fix",
+    "text": "Demo: Ruff Auto-Fix\n\n\nBefore\nimport numpy as np\nimport os,sys\nfrom typing import List,Dict\ndef bad_func(x,y,z):\n    result=x+y\n    unused_var = 10\n    return result\nCommands\npixi run ruff check --fix demo.py\npixi run ruff format demo.py\n\nAfter\nimport numpy as np\n\n\ndef bad_func(x, y, z):\n    result = x + y\n    return result\nFixed automatically:\n\nRemoved unused imports (os, sys)\nFixed spacing around operators\nRemoved unused variable\nSorted and cleaned imports"
+  },
+  {
+    "objectID": "slides.html#demo-quarto-live-edit",
+    "href": "slides.html#demo-quarto-live-edit",
+    "title": "Modern Python for Computational Biology",
+    "section": "Demo: Quarto Live Edit",
+    "text": "Demo: Quarto Live Edit\n\n\nStart the preview server\nquarto preview notebooks/01_introduction.qmd\nWhat you see\n\nLive reload on save\nCode + output rendered together\nClean markdown source (git-friendly!)\n\n\nThe .qmd file\n---\ntitle: \"My Analysis\"\n---\n\n## Introduction\n\nSome text explaining the analysis.\n\n```{python}\nimport numpy as np\nx = np.linspace(0, 10, 100)\nprint(f\"Created {len(x)} points\")\n```\n\nResults appear inline!"
+  },
+  {
+    "objectID": "slides.html#demo-pydantic-validation",
+    "href": "slides.html#demo-pydantic-validation",
+    "title": "Modern Python for Computational Biology",
+    "section": "Demo: Pydantic Validation",
+    "text": "Demo: Pydantic Validation\nfrom pydantic import BaseModel, Field, ValidationError\n\nclass ExperimentConfig(BaseModel):\n    n_samples: int = Field(ge=1, le=10000)\n    learning_rate: float = Field(gt=0, lt=1)\n\n# Valid config\nconfig = ExperimentConfig(n_samples=1000, learning_rate=0.01)\nprint(config)  # n_samples=1000 learning_rate=0.01\n\n# Invalid config - clear error message!\ntry:\n    bad = ExperimentConfig(n_samples=-5, learning_rate=2.0)\nexcept ValidationError as e:\n    print(e)\n    # n_samples: Input should be &gt;= 1\n    # learning_rate: Input should be &lt; 1\nYour experiments fail fast with clear messages."
+  },
+  {
+    "objectID": "slides.html#demo-hypothesis-bug-finding",
+    "href": "slides.html#demo-hypothesis-bug-finding",
+    "title": "Modern Python for Computational Biology",
+    "section": "Demo: Hypothesis Bug Finding",
+    "text": "Demo: Hypothesis Bug Finding\nfrom hypothesis import given, strategies as st\n\ndef remove_duplicates(items: list[int]) -&gt; list[int]:\n    \"\"\"Remove duplicates while preserving order.\"\"\"\n    seen = set()\n    return [x for x in items if x not in seen and not seen.add(x)]\n\n@given(st.lists(st.integers()))\ndef test_remove_duplicates(items):\n    result = remove_duplicates(items)\n    # Property: no duplicates\n    assert len(result) == len(set(result))\n    # Property: all elements preserved\n    assert set(result) == set(items)\n    # Property: order preserved\n    for i, x in enumerate(result):\n        original_idx = items.index(x)\n        assert all(items.index(y) &gt; original_idx for y in result[i+1:] if y != x)\nRun: pixi run pytest -v — Hypothesis generates hundreds of test cases automatically."
+  },
+  {
+    "objectID": "slides.html#what-we-covered",
+    "href": "slides.html#what-we-covered",
+    "title": "Modern Python for Computational Biology",
+    "section": "What We Covered",
+    "text": "What We Covered\n\n\n\nTopic\nKey Takeaway\n\n\n\n\nFoundations\nPixi + Ruff for 10-100x speedup\n\n\nType Safety\nPyright for local dev, mypy for CI\n\n\nConfiguration\nPydantic validates your experiment parameters\n\n\nTesting\nHypothesis finds bugs you didn’t think of\n\n\nCoverage\npytest-cov + interrogate automate quality\n\n\nWorkflows\nCI/CD catches issues before they reach main"
+  },
+  {
+    "objectID": "slides.html#resources",
+    "href": "slides.html#resources",
+    "title": "Modern Python for Computational Biology",
+    "section": "Resources",
+    "text": "Resources\n\nRepository: github.com/cbg-ethz/hive-protocol\nPixi: pixi.sh\nRuff: docs.astral.sh/ruff\nPydantic: docs.pydantic.dev\nHypothesis: hypothesis.readthedocs.io\npytest-cov: pytest-cov.readthedocs.io\nInterrogate: interrogate.readthedocs.io"
+  },
+  {
+    "objectID": "slides.html#next-steps",
+    "href": "slides.html#next-steps",
+    "title": "Modern Python for Computational Biology",
+    "section": "Next Steps",
+    "text": "Next Steps\n\nToday: Fork the repository\nThis week: Adapt it to your project\nOngoing: Share with your lab\n\n\n\n⬢ HIVE-PROTOCOL ⬢\n\nQuestions?\ngithub.com/cbg-ethz/hive-protocol"
+  },
+  {
+    "objectID": "slides.html#pixi-community-support",
+    "href": "slides.html#pixi-community-support",
+    "title": "Modern Python for Computational Biology",
+    "section": "Pixi: Community Support",
+    "text": "Pixi: Community Support\n\n\n\n\n\n\n\n\nEndorsed by conda-forge and Anaconda — the future of conda environments.\n\n\n\n\n\n\nNote\n\n\nFree for research: Pixi is BSD3-licensed. No fees, no restrictions on academic use."
+  },
+  {
+    "objectID": "slides.html#ci-resource-efficient-testing",
+    "href": "slides.html#ci-resource-efficient-testing",
+    "title": "Modern Python for Computational Biology",
+    "section": "CI: Resource-Efficient Testing",
+    "text": "CI: Resource-Efficient Testing\n\nParallel jobs with smart dependencies — fast feedback, minimal compute."
+  },
+  {
+    "objectID": "slides.html#ci-this-is-trust",
+    "href": "slides.html#ci-this-is-trust",
+    "title": "Modern Python for Computational Biology",
+    "section": "CI: This is Trust",
+    "text": "CI: This is Trust\n\nAdd features. Don’t worry about breaking something.\nWhen CI passes, you know it works."
+  },
+  {
+    "objectID": "slides.html#quality-isnt-optional.-its-automated.",
+    "href": "slides.html#quality-isnt-optional.-its-automated.",
+    "title": "Modern Python for Computational Biology",
+    "section": "Quality Isn’t Optional. It’s Automated.",
+    "text": "Quality Isn’t Optional. It’s Automated.\n\n\nTest Coverage (pytest-cov)\nName                         Cover\n-------------------------------\n__init__.py                   100%\ndata/simulate.py              100%\ninference/diagnostics.py       93%\ninference/kalman.py           100%\n-------------------------------\nTOTAL                          97%\n\n✓ Required coverage 70% reached\n\nDocstring Coverage (interrogate)\nName                         Cover%\n-------------------------------\n__init__.py                   100%\ndata/simulate.py              100%\ninference/diagnostics.py      100%\ninference/kalman.py           100%\n-------------------------------\nTOTAL                        94.4%\n\n✓ PASSED (minimum: 80%)\n\nLow friction, high standards. Runs automatically on every push."
+  },
+  {
+    "objectID": "slides.html#the-2026-landscape",
+    "href": "slides.html#the-2026-landscape",
+    "title": "Modern Python for Computational Biology",
+    "section": "The 2026 Landscape",
+    "text": "The 2026 Landscape\nThe Python ecosystem has matured. Use the modern tools.\n\n\n\n\n\nFunction\nThe Old Way\n\n\n\n\nPackage Mgmt\npip + requirements.txt\n\n\nCode Quality\nBlack + flake8 + isort\n\n\nData Processing\npandas for everything\n\n\nLiterate Prog.\nJupyter notebooks\n\n\nTesting\nManual test cases\n\n\nConfig Validation\nManual checks\n\n\n\n\n\n\n\n\nThe Modern Way\n\n\n\n\n→\npixi\n\n\n→\nRuff\n\n\n→\nPolars\n\n\n→\nQuarto\n\n\n→\npytest + Hypothesis\n\n\n→\nPydantic\n\n\n\nAll included in this template!"
+  },
+  {
+    "objectID": "slides.html#section-1",
+    "href": "slides.html#section-1",
+    "title": "Modern Python for Computational Biology",
+    "section": "",
+    "text": "🚗 car: ToyotaYaris2023 = float(3.14)\n\n“Python lets you do this at 3am. Type checkers stop you at 9am.”"
+  }
+]
