@@ -171,13 +171,13 @@ pixi install → 30 sec
 
 ::: {.columns}
 ::: {.column width="33%"}
-![](images/conda-forge-pixi.png){height="240px"}
+![](images/conda-forge-pixi.png){height="320px"}
 :::
 ::: {.column width="33%"}
-![](images/anaconda-pixi.png){height="240px"}
+![](images/anaconda-pixi.png){height="320px"}
 :::
 ::: {.column width="33%"}
-![](images/pixi-star-history.png){height="240px"}
+![](images/pixi-star-history.png){height="320px"}
 :::
 :::
 
