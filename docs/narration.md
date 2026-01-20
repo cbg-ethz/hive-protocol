@@ -10,7 +10,7 @@ This document contains spoken narration for each slide in the workshop presentat
 ## Title Slide
 **Duration:** 30 seconds
 
-> Welcome to "Modern Python for Computational Biology" - what we call the Hive Protocol. I'm [Name] from CBG at ETH Zurich. Over the next hour, we'll transform how you write Python code for research.
+> Welcome to "Modern Python for Computational Biology" - what we call the Hive Protocol. I'm Gordon Koehn from CBG at ETH Zurich. Over the next hour, we'll transform how you write Python code for research.
 
 ---
 

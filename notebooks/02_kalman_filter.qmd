@@ -1,7 +1,7 @@
 ---
 title: "Kalman Filter Tutorial"
 subtitle: "State-Space Models with PyMC"
-author: "CBG-ETH Zurich"
+author: "Gordon J. Koehn, CBG-ETH Zurich"
 date: "2026-01-22"
 format:
   html:
