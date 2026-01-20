@@ -866,8 +866,8 @@ def bad_func(x,y,z):
 ### Commands
 
 ```bash
-pixi run ruff check --fix demo.py
-pixi run ruff format demo.py
+pixi run ruff check --fix messy_code.py
+pixi run ruff format messy_code.py
 ```
 :::
 
