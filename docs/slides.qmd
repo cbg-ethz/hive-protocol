@@ -31,20 +31,13 @@ What if every project started with tests, docs, and CI already working?
 
 . . .
 
-:::: {.columns}
-::: {.column width="60%"}
+::: {.center}
+![](images/red-queen.png){height="150px"}
+:::
+
 ::: {.center}
 [⬢ HIVE-PROTOCOL ⬢]{.hive-brand .hive-brand-large}
 :::
-:::
-
-::: {.column width="40%"}
-::: {.red-queen-quote}
-![](images/red-queen.png){height="180px"}
-*"It takes all the running you can do, to keep in the same place..."*
-:::
-:::
-::::
 
 
 ## The Problem
