@@ -19,13 +19,7 @@ execute:
   eval: false
 ---
 
-# Foundations {background-color="#2E86AB"}
-
 ## {background-color="#2E86AB"}
-
-::: {.center}
-[⬢ HIVE-PROTOCOL ⬢]{.hive-brand .hive-brand-large}
-:::
 
 ::: {.r-fit-text}
 What if every project started with tests, docs, and CI already working?
@@ -34,6 +28,13 @@ What if every project started with tests, docs, and CI already working?
 . . .
 
 **Fork this repo. Delete the TODO. Ship research software.**
+
+. . .
+
+::: {.center}
+[⬢ HIVE-PROTOCOL ⬢]{.hive-brand .hive-brand-large}
+:::
+
 
 ## The Problem
 
@@ -58,6 +59,8 @@ What if every project started with tests, docs, and CI already working?
 - **Time** lost to environment hell
 :::
 :::
+
+# Foundations {background-color="#2E86AB"}
 
 ## The 2025 Landscape
 
