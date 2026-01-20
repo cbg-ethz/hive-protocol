@@ -711,6 +711,20 @@ Every push triggers automated testing.
 
 **Badge on README = instant trust.**
 
+## CI: Resource-Efficient Testing
+
+![](images/ci-dependency-graph.png){height="500px"}
+
+Parallel jobs with smart dependencies — fast feedback, minimal compute.
+
+## CI: This is Trust
+
+![](images/ci-passing.png){height="450px"}
+
+**Add features. Don't worry about breaking something.**
+
+When CI passes, you know it works.
+
 ## The Development Loop
 
 ```{mermaid}
