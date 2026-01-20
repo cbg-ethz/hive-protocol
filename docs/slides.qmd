@@ -427,6 +427,33 @@ Runs on every commit. No type errors reach main.
 :::
 :::
 
+## {background-color="#1a1a2e"}
+
+:::: {.columns}
+::: {.column width="55%"}
+```{python}
+#| eval: false
+#| code-line-numbers: false
+#| classes: large-code
+
+# Python at 3am:
+car: ToyotaYaris2023 = float(3.14)
+
+# "It's fine, I'll fix the types later"
+```
+
+::: {.fragment}
+**Night mode:** No guardrails, no warnings, pure chaos.
+
+**Day mode:** Type checkers save you from yourself.
+:::
+:::
+
+::: {.column width="45%"}
+![](images/toyota-yaris-type.png){.center}
+:::
+::::
+
 ## Why Pydantic?
 
 ::: {.columns}

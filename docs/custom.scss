@@ -270,3 +270,15 @@ $text-muted: #6c757d;
   font-weight: 600;
   color: #28a745;
 }
+
+// Large code for meme slides
+.large-code code {
+  font-size: 1.1em !important;
+  line-height: 1.6;
+}
+
+.large-code .sourceCode {
+  background: #0d1117 !important;
+  border-radius: 12px;
+  padding: 1.5rem !important;
+}
