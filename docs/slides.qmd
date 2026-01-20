@@ -908,7 +908,7 @@ def bad_func(x, y, z):
 ### Start the preview server
 
 ```bash
-quarto preview notebooks/01_introduction.qmd
+pixi run quarto preview notebooks/01_introduction.qmd
 ```
 
 ### What you see
