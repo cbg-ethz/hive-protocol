@@ -72,6 +72,9 @@ hive-protocol = { path = ".", editable = true }
 # Snakemake from PyPI (more reliable cross-platform than conda)
 snakemake = ">=8.0"
 
+# Docstring coverage checker
+interrogate = ">=1.5"
+
 # =============================================================================
 # Tasks - Custom commands accessible via `pixi run <task>`
 # =============================================================================
@@ -100,8 +103,11 @@ typecheck = "pyright src/"           # Default: fast local feedback
 typecheck-strict = "pyright src/ --level strict"  # Stricter checking
 typecheck-ci = "mypy src/"           # Used in CI/pre-commit
 
+# Docstring coverage
+docstring-cov = "interrogate src/ -v --fail-under=80"
+
 # Run all quality checks (uses mypy for CI compatibility)
-check = { depends-on = ["lint", "format-check", "typecheck-ci", "test"] }
+check = { depends-on = ["lint", "format-check", "typecheck-ci", "docstring-cov", "test"] }
 
 # Install pre-commit hooks
 hooks = "pre-commit install"

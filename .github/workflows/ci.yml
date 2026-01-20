@@ -48,6 +48,9 @@ jobs:
       - name: Check formatting
         run: pixi run format-check
 
+      - name: Check docstring coverage
+        run: pixi run docstring-cov
+
   typecheck:
     name: Type Check
     runs-on: ubuntu-latest

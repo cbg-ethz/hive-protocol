@@ -725,6 +725,45 @@ Parallel jobs with smart dependencies — fast feedback, minimal compute.
 
 When CI passes, you know it works.
 
+## Quality Isn't Optional. It's Automated.
+
+::: {.columns}
+::: {.column width="50%"}
+### Test Coverage (pytest-cov)
+
+```
+Name                         Cover
+-------------------------------
+__init__.py                   100%
+data/simulate.py              100%
+inference/diagnostics.py       93%
+inference/kalman.py           100%
+-------------------------------
+TOTAL                          97%
+
+✓ Required coverage 70% reached
+```
+:::
+::: {.column width="50%"}
+### Docstring Coverage (interrogate)
+
+```
+Name                         Cover%
+-------------------------------
+__init__.py                   100%
+data/simulate.py              100%
+inference/diagnostics.py      100%
+inference/kalman.py           100%
+-------------------------------
+TOTAL                        94.4%
+
+✓ PASSED (minimum: 80%)
+```
+:::
+:::
+
+**Low friction, high standards.** Runs automatically on every push.
+
 ## The Development Loop
 
 ```{mermaid}

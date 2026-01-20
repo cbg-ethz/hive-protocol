@@ -388,7 +388,9 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/6a/09/e21df6aef1e1ffc0c816f0522ddc3f6dcded766c3261813131c78a704470/gitpython-3.1.46-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/f0/0f/310fb31e39e2d734ccaa2c0fb981ee41f7bd5056ce9bc29b2248bd569169/humanfriendly-10.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/0f/a4/25df835a9b9b372a4a869a8a1ac30a32199f2b3f581ad0e249f7e3d19eed/immutables-0.21-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/12/c9/6869a1dcf4aaf309b9543ec070be3ec3adebee7c9bec9af8c230494134b9/interrogate-1.7.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/99/6c/64cafaceea3f99927e84b38a362ec6a8f24f33061c90bda77dfe1cd4c3c6/pulp-3.3.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/f6/f0/10642828a8dfb741e5f3fbaac830550a518a775c7fff6f04a007259b0548/py-1.11.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/66/11/e295e07d4ae500144177f875a8de11daa4d86b8246ab41c76a98ce9280ca/reretry-0.11.8-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ad/95/bc978be7ea0babf2fb48a414b6afaad414c6a9e8b1eafc5b8a53c030381a/smart_open-7.5.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/be/d09147ad1ec7934636ad912901c5fd7667e1c858e19d355237db0d0cd5e4/smmap-5.0.2-py3-none-any.whl
@@ -738,7 +740,9 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/6a/09/e21df6aef1e1ffc0c816f0522ddc3f6dcded766c3261813131c78a704470/gitpython-3.1.46-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/f0/0f/310fb31e39e2d734ccaa2c0fb981ee41f7bd5056ce9bc29b2248bd569169/humanfriendly-10.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/4d/f9/0c46f600702b815182212453f5514c0070ee168b817cdf7c3767554c8489/immutables-0.21-cp312-cp312-macosx_10_13_x86_64.whl
+      - pypi: https://files.pythonhosted.org/packages/12/c9/6869a1dcf4aaf309b9543ec070be3ec3adebee7c9bec9af8c230494134b9/interrogate-1.7.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/99/6c/64cafaceea3f99927e84b38a362ec6a8f24f33061c90bda77dfe1cd4c3c6/pulp-3.3.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/f6/f0/10642828a8dfb741e5f3fbaac830550a518a775c7fff6f04a007259b0548/py-1.11.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/66/11/e295e07d4ae500144177f875a8de11daa4d86b8246ab41c76a98ce9280ca/reretry-0.11.8-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ad/95/bc978be7ea0babf2fb48a414b6afaad414c6a9e8b1eafc5b8a53c030381a/smart_open-7.5.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/be/d09147ad1ec7934636ad912901c5fd7667e1c858e19d355237db0d0cd5e4/smmap-5.0.2-py3-none-any.whl
@@ -1083,7 +1087,9 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/6a/09/e21df6aef1e1ffc0c816f0522ddc3f6dcded766c3261813131c78a704470/gitpython-3.1.46-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/f0/0f/310fb31e39e2d734ccaa2c0fb981ee41f7bd5056ce9bc29b2248bd569169/humanfriendly-10.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/29/34/7608d2eab6179aa47e8f59ab0fbd5b3eeb2333d78c9dc2da0de8de4ed322/immutables-0.21-cp312-cp312-macosx_11_0_arm64.whl
+      - pypi: https://files.pythonhosted.org/packages/12/c9/6869a1dcf4aaf309b9543ec070be3ec3adebee7c9bec9af8c230494134b9/interrogate-1.7.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/99/6c/64cafaceea3f99927e84b38a362ec6a8f24f33061c90bda77dfe1cd4c3c6/pulp-3.3.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/f6/f0/10642828a8dfb741e5f3fbaac830550a518a775c7fff6f04a007259b0548/py-1.11.0-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/66/11/e295e07d4ae500144177f875a8de11daa4d86b8246ab41c76a98ce9280ca/reretry-0.11.8-py2.py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ad/95/bc978be7ea0babf2fb48a414b6afaad414c6a9e8b1eafc5b8a53c030381a/smart_open-7.5.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/be/d09147ad1ec7934636ad912901c5fd7667e1c858e19d355237db0d0cd5e4/smmap-5.0.2-py3-none-any.whl
@@ -3677,8 +3683,8 @@ packages:
   timestamp: 1611053664863
 - pypi: ./
   name: hive-protocol
-  version: 0.1.1.dev18
-  sha256: fc42c85a229978c0bb312a65d312d13021da3778c618abfb5134259780a44ec3
+  version: 0.1.1.dev27
+  sha256: 1729c081c6a8e8aceeb6e8ff51c182ab8d20e883b5a7e62f0c61549985055d9f
   requires_dist:
   - arviz>=0.15
   - numpy>=1.24
@@ -3687,6 +3693,7 @@ packages:
   - pymc>=5.0
   - scipy>=1.10
   - hypothesis>=6.0 ; extra == 'all'
+  - interrogate>=1.5 ; extra == 'all'
   - matplotlib>=3.7 ; extra == 'all'
   - mypy>=1.0 ; extra == 'all'
   - pre-commit>=3.0 ; extra == 'all'
@@ -3697,6 +3704,7 @@ packages:
   - seaborn>=0.12 ; extra == 'all'
   - snakemake>=8.0 ; extra == 'all'
   - hypothesis>=6.0 ; extra == 'dev'
+  - interrogate>=1.5 ; extra == 'dev'
   - mypy>=1.0 ; extra == 'dev'
   - pre-commit>=3.0 ; extra == 'dev'
   - pytest-cov>=4.0 ; extra == 'dev'
@@ -3908,6 +3916,34 @@ packages:
   - pkg:pypi/iniconfig?source=compressed-mapping
   size: 13387
   timestamp: 1760831448842
+- pypi: https://files.pythonhosted.org/packages/12/c9/6869a1dcf4aaf309b9543ec070be3ec3adebee7c9bec9af8c230494134b9/interrogate-1.7.0-py3-none-any.whl
+  name: interrogate
+  version: 1.7.0
+  sha256: b13ff4dd8403369670e2efe684066de9fcb868ad9d7f2b4095d8112142dc9d12
+  requires_dist:
+  - attrs
+  - click>=7.1
+  - colorama
+  - py
+  - tabulate
+  - tomli ; python_full_version < '3.11'
+  - cairosvg ; extra == 'dev'
+  - sphinx ; extra == 'dev'
+  - sphinx-autobuild ; extra == 'dev'
+  - pytest ; extra == 'dev'
+  - pytest-cov ; extra == 'dev'
+  - pytest-mock ; extra == 'dev'
+  - coverage[toml] ; extra == 'dev'
+  - wheel ; extra == 'dev'
+  - pre-commit ; extra == 'dev'
+  - sphinx ; extra == 'docs'
+  - sphinx-autobuild ; extra == 'docs'
+  - cairosvg ; extra == 'png'
+  - pytest ; extra == 'tests'
+  - pytest-cov ; extra == 'tests'
+  - pytest-mock ; extra == 'tests'
+  - coverage[toml] ; extra == 'tests'
+  requires_python: '>=3.8'
 - conda: https://conda.anaconda.org/conda-forge/noarch/ipykernel-7.1.0-pyh5552912_0.conda
   sha256: b5f7eaba3bb109be49d00a0a8bda267ddf8fa66cc1b54fc5944529ed6f3e8503
   md5: 1849eec35b60082d2bd66b4e36dec2b6
@@ -8222,6 +8258,11 @@ packages:
   - pkg:pypi/pure-eval?source=hash-mapping
   size: 16668
   timestamp: 1733569518868
+- pypi: https://files.pythonhosted.org/packages/f6/f0/10642828a8dfb741e5f3fbaac830550a518a775c7fff6f04a007259b0548/py-1.11.0-py2.py3-none-any.whl
+  name: py
+  version: 1.11.0
+  sha256: 607c53218732647dff4acdfcd50cb62615cedf612e72d1724fb1a0cc6405b378
+  requires_python: '>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*'
 - conda: https://conda.anaconda.org/conda-forge/noarch/pycparser-2.22-pyh29332c3_1.conda
   sha256: 79db7928d13fab2d892592223d7570f5061c192f27b9febd1a418427b719acc6
   md5: 12c566707c80111f9799308d9e265aef
