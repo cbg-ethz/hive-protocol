@@ -62,7 +62,7 @@ What if every project started with tests, docs, and CI already working?
 
 # Foundations {background-color="#2E86AB"}
 
-## The 2025 Landscape
+## The 2026 Landscape
 
 The Python ecosystem has matured. **Use the modern tools.**
 
