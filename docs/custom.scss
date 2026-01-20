@@ -301,11 +301,13 @@ $text-muted: #6c757d;
 .red-queen-quote {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
   color: white;
-  font-size: 0.7em;
+  font-size: 0.75em;
   font-style: italic;
   opacity: 0.9;
+  margin: 0 auto;
 }
 
 .red-queen-quote img {

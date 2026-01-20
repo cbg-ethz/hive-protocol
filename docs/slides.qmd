@@ -31,8 +31,9 @@ What if every project started with tests, docs, and CI already working?
 
 . . .
 
-::: {.center}
-![](images/red-queen.png){height="150px"}
+::: {.red-queen-quote}
+![](images/red-queen.png){height="120px"}
+*"It takes all the running you can do, to keep in the same place..."*
 :::
 
 ::: {.center}
