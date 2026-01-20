@@ -668,38 +668,38 @@ def test_kalman_filter_properties(n_steps, process_noise):
 
 ## Git for Researchers
 
+```
+main     ●───●───●───────────●───●
+              \             /
+feature        ●───●───●───●
+               ↑       ↑   ↑
+            branch  commits  PR merge
+```
+
 ::: {.columns}
 ::: {.column width="50%"}
-### Feature branches
+### The workflow
 
 ```bash
-# Never commit directly to main
 git checkout -b feature/add-filter
-
-# Make changes, then
-git add .
-git commit -m "Add bandpass filter"
-
-# Merge via pull request
+# ... make changes ...
+git add . && git commit -m "feat: add filter"
 git push -u origin feature/add-filter
+# Open PR → CI runs → review → merge
 ```
 :::
 
 ::: {.column width="50%"}
-### Good commit messages
+### Commit message format
 
-**Bad:**
 ```
-fix
-update
-changes
-```
+<type>: <description>
 
-**Good:**
-```
-fix: correct off-by-one in filter
-feat: add bandpass filter option
-docs: update installation guide
+fix:   bug fixes
+feat:  new features
+docs:  documentation
+test:  adding tests
+refactor: code changes
 ```
 :::
 :::
@@ -844,28 +844,6 @@ flowchart LR
 - Quarto notebooks pattern
 :::
 :::
-
-## Hands-on: Make a Change
-
-```bash
-# Create branch
-git checkout -b demo/my-feature
-
-# Edit something (e.g., add a docstring)
-# ...
-
-# Run checks
-pixi run check
-
-# Commit
-git add .
-git commit -m "docs: add docstring to function"
-
-# Watch pre-commit run!
-
-# Push
-git push -u origin demo/my-feature
-```
 
 # Hands-On Demos {background-color="#F18F01"}
 
