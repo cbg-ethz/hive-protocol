@@ -156,6 +156,27 @@ $text-muted: #6c757d;
   border-radius: 0 8px 8px 0;
 }
 
+// Blockquotes on blue background slides
+.reveal section[data-background-color="#2E86AB"] blockquote {
+  border-left-color: white;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+// Text on blue background slides
+.reveal section[data-background-color="#2E86AB"] {
+  color: white;
+}
+
+.reveal section[data-background-color="#2E86AB"] h3 {
+  color: white;
+}
+
+.reveal section[data-background-color="#2E86AB"] a {
+  color: white;
+  text-decoration: underline;
+}
+
 // Better table styling
 .reveal table {
   border-collapse: collapse;

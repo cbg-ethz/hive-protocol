@@ -1009,28 +1009,31 @@ Watch Hypothesis generate **600 test cases** (200 per property) in under a secon
 | Coverage | pytest-cov + interrogate automate quality |
 | Workflows | CI/CD catches issues before they reach main |
 
-## Resources
+## {background-color="#2E86AB"}
 
-- **Repository:** [github.com/cbg-ethz/hive-protocol](https://github.com/cbg-ethz/hive-protocol)
-- **Pixi:** [pixi.sh](https://pixi.sh)
-- **Ruff:** [docs.astral.sh/ruff](https://docs.astral.sh/ruff)
-- **Pydantic:** [docs.pydantic.dev](https://docs.pydantic.dev)
-- **Hypothesis:** [hypothesis.readthedocs.io](https://hypothesis.readthedocs.io)
-- **pytest-cov:** [pytest-cov.readthedocs.io](https://pytest-cov.readthedocs.io)
-- **Interrogate:** [interrogate.readthedocs.io](https://interrogate.readthedocs.io)
+::: {.columns}
+::: {.column width="65%"}
 
-## Next Steps
-
-1. **Today:** Fork the repository
-2. **This week:** Adapt it to your project
-3. **Ongoing:** Share with your lab
-
-. . .
-
-::: {.center}
-[⬢ HIVE-PROTOCOL ⬢]{.hive-brand .hive-brand-small}
+::: {.r-fit-text}
+Run **twice as fast**
 :::
 
-**Questions?**
+<br>
+
+> *"Now, here, you see, it takes all the running you can do, to keep in the same place. If you want to get somewhere else, you must run **at least twice as fast as that**!"*
+>
+> — Lewis Carroll, *Through the Looking-Glass*
+
+<br>
+
+### Next Step
+
+**Fork. Adapt. Ship.**
 
 [github.com/cbg-ethz/hive-protocol](https://github.com/cbg-ethz/hive-protocol)
+
+:::
+::: {.column width="35%"}
+![](images/red-queen.png){height="450px"}
+:::
+:::
