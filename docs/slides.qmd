@@ -170,15 +170,22 @@ pixi install → 30 sec
 ## Pixi: Community Support
 
 ::: {.columns}
-::: {.column width="50%"}
-![](images/conda-forge-pixi.png){height="280px"}
+::: {.column width="33%"}
+![](images/conda-forge-pixi.png){height="240px"}
 :::
-::: {.column width="50%"}
-![](images/anaconda-pixi.png){height="280px"}
+::: {.column width="33%"}
+![](images/anaconda-pixi.png){height="240px"}
+:::
+::: {.column width="33%"}
+![](images/pixi-star-history.png){height="240px"}
 :::
 :::
 
 Endorsed by **conda-forge** and **Anaconda** — the future of conda environments.
+
+::: {.callout-note}
+**Free for research:** Pixi is BSD3-licensed. No fees, no restrictions on academic use.
+:::
 
 ## Why Ruff?
 
